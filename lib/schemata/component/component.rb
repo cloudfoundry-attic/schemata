@@ -34,7 +34,7 @@ module Schemata
       curr_class.new(msg_contents)
     end
 
-    def self.encode(msg_obj, aux_data = {})
+    def self.encode(msg_obj)
       msg_type = msg_obj.message_type
       curr_version = msg_type.current_version
       curr_class = msg_type.current_class
@@ -43,7 +43,7 @@ module Schemata
       curr_msg_obj = msg_obj
       (curr_class::MIN_VERSION_ALLOWED...curr_version).reverse_each do |v|
         curr_msg_obj, old_fields =
-          curr_msg_obj.generate_old_fields(aux_data["V#{v}"])
+          curr_msg_obj.generate_old_fields
          msg["V#{v}"] = old_fields
       end
       msg["min_version"] = curr_class::MIN_VERSION_ALLOWED
