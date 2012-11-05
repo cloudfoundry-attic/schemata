@@ -1,10 +1,11 @@
 require 'yajl'
 require 'set'
+require File.expand_path('../../helpers/hash_copy', __FILE__)
 
 module Schemata
   class ParsedMessage
 
-    attr_reader :version, :min_version, :contents
+    attr_reader :version, :min_version
 
     def initialize(json)
       @contents = Yajl::Parser.parse(json)
@@ -33,6 +34,10 @@ module Schemata
       end
 
       @version = versions.max
+    end
+
+    def contents
+      Schemata::HashCopyHelpers.deep_copy(@contents)
     end
   end
 end

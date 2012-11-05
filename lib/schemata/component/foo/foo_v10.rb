@@ -1,4 +1,5 @@
 require 'membrane'
+require File.expand_path('../../../helpers/hash_copy', __FILE__)
 
 module Schemata
   module Component
@@ -31,15 +32,20 @@ module Schemata::Component::Foo
   ############################################
 
     SCHEMA.schemas.keys.each do |k|
-      attr_reader k.to_sym
+      define_method(k.to_sym) do
+        Schemata::HashCopyHelpers.deep_copy(@contents[k])
+      end
+
       define_method("#{k}=".to_sym) do |v|
-        instance_variable_set("@#{k}", v)
-        @contents[k] = v
+        field_value = Schemata::HashCopyHelpers.deep_copy(v)
+        instance_variable_set("@#{k}", field_value)
+        @contents[k] = Schemata::HashCopyHelpers.deep_copy(field_value)
         begin
-          SCHEMA.validate @contents
+          SCHEMA.schemas[k].validate(@contents[k])
         rescue Membrane::SchemaValidationError => e
           raise Schemata::UpdateAttributeError.new(e.message)
         end
+        v
       end
     end
 
@@ -54,18 +60,20 @@ module Schemata::Component::Foo
 
     def initialize(msg_data)
       begin
-        SCHEMA.validate msg_data
+        SCHEMA.validate(msg_data)
       rescue Membrane::SchemaValidationError => e
         raise Schemata::DecodeError.new(e.message)
       end
-      @contents = msg_data.dup
+      @contents = {}
       SCHEMA.schemas.keys.each do |k|
-        instance_variable_set "@#{k}", msg_data[k]
+        field_value = Schemata::HashCopyHelpers.deep_copy(msg_data[k])
+        instance_variable_set("@#{k}", field_value)
+        @contents[k] = field_value
       end
     end
 
     def contents
-      @contents.dup
+      Schemata::HashCopyHelpers.deep_copy(@contents)
     end
 
     def message_type

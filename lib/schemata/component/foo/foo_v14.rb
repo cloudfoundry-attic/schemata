@@ -1,4 +1,5 @@
 require 'membrane'
+require File.expand_path('../../../helpers/hash_copy', __FILE__)
 
 module Schemata
   module Component
@@ -36,7 +37,7 @@ module Schemata::Component::Foo
         raise Schemata::DecodeError.new(e.message)
       end
 
-      new_data = old_data.dup
+      new_data = Schemata::HashCopyHelpers.deep_copy(old_data)
       new_data.delete("foo4")
       new_data
     end
@@ -47,21 +48,27 @@ module Schemata::Component::Foo
       end
       msg_contents = contents
       msg_contents.update(@aux_data)
-      return Schemata::Component::Foo::V13.new(msg_contents), @aux_data.dup
+      return Schemata::Component::Foo::V13.new(msg_contents), 
+        Schemata::HashCopyHelpers.deep_copy(@aux_data)
     end
 
     #################################################
 
     SCHEMA.schemas.keys.each do |k|
-      attr_reader k.to_sym
+      define_method(k.to_sym) do
+        Schemata::HashCopyHelpers.deep_copy(@contents[k])
+      end
+
       define_method("#{k}=".to_sym) do |v|
-        instance_variable_set("@#{k}", v)
-        @contents[k] = v
+        field_values = Schemata::HashCopyHelpers.deep_copy(v)
+        instance_variable_set("@#{k}", field_value)
+        @contents[k] = field_value
         begin
-          SCHEMA.validate @contents
+          SCHEMA.schemas[k].validate(@contents[k])
         rescue Membrane::SchemaValidationError => e
           raise Schemata::UpdateAttributeError.new(e.message)
         end
+        v
       end
     end
 
@@ -88,17 +95,19 @@ module Schemata::Component::Foo
           raise Schemata::EncodeError.new(e.message)
         end
 
-        @aux_data = aux_data
+        @aux_data = Schemata::HashCopyHelpers.deep_copy(aux_data)
       end
 
-      @contents = msg_data.dup
+      @contents = {}
       SCHEMA.schemas.keys.each do |k|
-        instance_variable_set("@#{k}", msg_data[k])
+        field_value = Schemata::HashCopyHelpers.deep_copy(msg_data[k])
+        instance_variable_set("@#{k}", field_value)
+        @contents[k] = field_value
       end
     end
 
     def contents
-      @contents.dup
+      Schemata::HashCopyHelpers.deep_copy(@contents)
     end
 
     def message_type
