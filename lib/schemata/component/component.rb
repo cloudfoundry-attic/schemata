@@ -31,10 +31,25 @@ module Schemata
             .upvert(msg_contents)
         end
       end
-      curr_class.new(msg_contents)
+
+      begin
+        msg_obj = curr_class.new(msg_contents)
+        msg_obj.validate
+        return msg_obj
+      rescue Schemata::MessageConstructionError => e
+        raise Schemata::DecodeError.new(e.message)
+      rescue Membrane::SchemaValidationError => e
+        raise Schemata::DecodeError.new(e.message)
+      end
     end
 
     def self.encode(msg_obj)
+      begin
+        msg_obj.validate
+      rescue Membrane::SchemaValidationError => e
+        raise Schemata::EncodeError.new(e.message)
+      end
+
       msg_type = msg_obj.message_type
       curr_version = msg_type.current_version
       curr_class = msg_type.current_class

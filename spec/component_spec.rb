@@ -1,7 +1,6 @@
 require File.expand_path('../../lib/schemata/component/component', __FILE__)
 
-describe "Schemata::Component" do
-
+describe Schemata::Component do
   before :each do
     @v10_msg = '{
       "min_version": 10,
@@ -82,13 +81,42 @@ describe "Schemata::Component" do
 
   end
 
-  describe "Foo::CURRENT = 10" do
-    before :each do
-      Schemata::Component::Foo.stub(:current_version).and_return(10)
-      @curr_class = Schemata::Component::Foo.current_class
+  describe "#decode" do
+    it "should raise an error if the 'min_version' is missing" do
+      msg_hash = {
+        "V10" => {},
+        "V11" => {
+          "foo1" => "foo",
+          "foo2" => 1,
+          "foo3" => 1
+        }
+      }
+      json_msg = Yajl::Encoder.encode msg_hash
+      expect {
+        foo_obj = Schemata::Component.decode(
+          Schemata::Component::Foo,
+          json_msg)
+      }.to raise_error(Schemata::DecodeError)
     end
 
-    describe "#encode" do
+    it "should raise an error if the message has no Vxx key" do
+      msg_hash = {
+        "min_version" => 10
+      }
+      json_msg = Yajl::Encoder.encode msg_hash
+      expect {
+        foo_obj = Schemata::Component.decode(
+          Schemata::Component::Foo,
+          json_msg)
+      }.to raise_error(Schemata::DecodeError)
+    end
+
+    describe "(current version is 10)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(10)
+        @curr_class = Schemata::Component::Foo.current_class
+      end
+
       it "should take a v10 message and return a correct Foo::V10 object" do
         foo_obj = Schemata::Component.decode(
           Schemata::Component::Foo,
@@ -123,7 +151,7 @@ describe "Schemata::Component" do
             "foo1" => "foo",
           }
         }
-        json_msg = Yajl::Encoder.encode msg_hash
+        json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
           foo_obj = Schemata::Component.decode(
             Schemata::Component::Foo,
@@ -142,7 +170,7 @@ of V11 and V10 hashes" do
             "foo3" => 1
           }
         }
-        json_msg = Yajl::Encoder.encode msg_hash
+        json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
           foo_obj = Schemata::Component.decode(
             Schemata::Component::Foo,
@@ -188,31 +216,12 @@ of V10, V11, and V12 hashes" do
       end
     end
 
-    describe "#encode" do
-      it "should take a v10 obj and return the correct json string" do
-        v10_obj = Schemata::Component::Foo::V10.new @v10_hash
-        json = Schemata::Component.encode(v10_obj)
-        returned_hash = Yajl::Parser.parse json
-        returned_hash.keys.should =~ ['min_version', 'V10']
-
-        returned_hash['min_version'].should ==
-          @curr_class::MIN_VERSION_ALLOWED
-
-        v10 = returned_hash['V10']
-        v10.each do |k, v|
-          v10[k].should == @v10_hash[k]
-        end
+    describe "(current version is 11)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(11)
+        @curr_class = Schemata::Component::Foo.current_class
       end
-    end
-  end
 
-  describe "Foo::CURRENT = 11" do
-    before :each do
-      Schemata::Component::Foo.stub(:current_version).and_return(11)
-      @curr_class = Schemata::Component::Foo.current_class
-    end
-
-    describe "#decode" do
       it "should take a v10 message, upvert, and return a correct V11 object" do
         foo_obj = Schemata::Component.decode(
           Schemata::Component::Foo,
@@ -304,37 +313,12 @@ of V10, V11, and V12 hashes" do
       end
     end
 
-    describe "#encode" do
-      it "should take a v11 obj and return the correct json string" do
-        v11_obj = Schemata::Component::Foo::V11.new @v11_hash
-        json = Schemata::Component.encode(v11_obj)
-        returned_hash = Yajl::Parser.parse json
-
-        returned_hash.keys.should =~ ['min_version', 'V10', 'V11']
-
-        returned_hash['min_version'].should ==
-          @curr_class::MIN_VERSION_ALLOWED
-
-        v10 = returned_hash["V10"]
-        v10.each do |k, v|
-          v10[k].should == @v10_hash[k]
-        end
-
-        v11 = returned_hash["V11"]
-        v11.each do |k, v|
-          v11[k].should == @v11_hash[k]
-        end
+    describe "(current version is 12)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(12)
+        @curr_class = Schemata::Component::Foo.current_class
       end
-    end
-  end
 
-  describe "Foo:CURRENT = 12" do
-    before :each do
-      Schemata::Component::Foo.stub(:current_version).and_return(12)
-      @curr_class = Schemata::Component::Foo.current_class
-    end
-
-    describe "#decode" do
       it "should take a v10 message, upvert twice, and return a correct V12 object" do
         foo_obj = Schemata::Component.decode(
           Schemata::Component::Foo,
@@ -418,42 +402,12 @@ of V10, V11, and V12 hashes" do
       end
     end
 
-    describe "#encode" do
-      it "should take a v12 obj and return the correct json string" do
-        v12_obj = Schemata::Component::Foo::V12.new @v12_hash
-        json = Schemata::Component.encode(v12_obj)
-        returned_hash = Yajl::Parser.parse json
-
-        returned_hash.keys.should =~ ['min_version', 'V10', 'V11', 'V12']
-
-        returned_hash['min_version'].should ==
-          @curr_class::MIN_VERSION_ALLOWED
-
-        v10 = returned_hash['V10']
-        v10.each do |k, v|
-          v10[k].should == @v10_hash[k]
-        end
-
-        v11 = returned_hash['V11']
-        v11.each do |k, v|
-          v11[k].should == @v11_hash[k]
-        end
-
-        v12 = returned_hash['V12']
-        v12.each do |k, v|
-          v12[k].should == @v12_hash[k]
-        end
+    describe "(current version is 13)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(13)
+        @curr_class = Schemata::Component::Foo.current_class
       end
-    end
-  end
 
-  describe "Foo:CURRENT = 13" do
-    before :each do
-      Schemata::Component::Foo.stub(:current_version).and_return(13)
-      @curr_class = Schemata::Component::Foo.current_class
-    end
-
-    describe "#decode" do
       it "should validate a v10 message and return a correct V13 object" do
         foo_obj = Schemata::Component.decode(
           Schemata::Component::Foo,
@@ -505,32 +459,12 @@ of V10, V11, and V12 hashes" do
       end
     end
 
-    describe "#encode" do
-      it "should take a v13 obj and return the correct json string" do
-        v13_obj = Schemata::Component::Foo::V13.new @v13_hash
-        json = Schemata::Component.encode(v13_obj)
-        returned_hash = Yajl::Parser.parse json
-
-        returned_hash.keys.should =~ ['min_version', 'V13']
-
-        returned_hash['min_version'].should ==
-          @curr_class::MIN_VERSION_ALLOWED
-
-        v13 = returned_hash['V13']
-        v13.each do |k, v|
-          v13[k].should == @v13_hash[k]
-        end
+    describe "(current version is 14)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(14)
+        @curr_class = Schemata::Component::Foo.current_class
       end
-    end
-  end
 
-  describe "Foo::CURRENT = 14" do
-    before :each do
-      Schemata::Component::Foo.stub(:current_version).and_return(14)
-      @curr_class = Schemata::Component::Foo.current_class
-    end
-
-    describe "#decode" do
       it "should validate a v13 message and return a correct v14 object" do
         foo_obj = Schemata::Component.decode(
           Schemata::Component::Foo,
@@ -549,8 +483,149 @@ of V10, V11, and V12 hashes" do
         foo_obj.foo3.should == [1]
       end
     end
+  end
 
-    describe "#encode" do
+  describe "#encode" do
+    describe "(current version is 10)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(10)
+        @curr_class = Schemata::Component::Foo.current_class
+      end
+
+      it "should take a v10 obj and return the correct json string" do
+        v10_obj = Schemata::Component::Foo::V10.new(@v10_hash)
+        json = Schemata::Component.encode(v10_obj)
+        returned_hash = Yajl::Parser.parse json
+        returned_hash.keys.should =~ ['min_version', 'V10']
+
+        returned_hash['min_version'].should ==
+          @curr_class::MIN_VERSION_ALLOWED
+
+        v10 = returned_hash['V10']
+        v10.each do |k, v|
+          v10[k].should == @v10_hash[k]
+        end
+      end
+
+      it "should raise an error if the msg_obj is incomplete" do
+        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        expect {
+          json = Schemata::Component.encode(msg_obj)
+        }.to raise_error(Schemata::EncodeError)
+      end
+    end
+
+    describe "(current version is 11)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(11)
+        @curr_class = Schemata::Component::Foo.current_class
+      end
+
+      it "should take a v11 obj and return the correct json string" do
+        v11_obj = Schemata::Component::Foo::V11.new @v11_hash
+        json = Schemata::Component.encode(v11_obj)
+        returned_hash = Yajl::Parser.parse json
+
+        returned_hash.keys.should =~ ['min_version', 'V10', 'V11']
+
+        returned_hash['min_version'].should ==
+          @curr_class::MIN_VERSION_ALLOWED
+
+        v10 = returned_hash["V10"]
+        v10.each do |k, v|
+          v10[k].should == @v10_hash[k]
+        end
+
+        v11 = returned_hash["V11"]
+        v11.each do |k, v|
+          v11[k].should == @v11_hash[k]
+        end
+      end
+
+      it "should raise an error if the msg_obj is incomplete" do
+        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        expect {
+          json = Schemata::Component.encode(msg_obj)
+        }.to raise_error(Schemata::EncodeError)
+      end
+    end
+
+    describe "(current version is 12)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(12)
+        @curr_class = Schemata::Component::Foo.current_class
+      end
+
+      it "should take a v12 obj and return the correct json string" do
+        v12_obj = Schemata::Component::Foo::V12.new @v12_hash
+        json = Schemata::Component.encode(v12_obj)
+        returned_hash = Yajl::Parser.parse json
+
+        returned_hash.keys.should =~ ['min_version', 'V10', 'V11', 'V12']
+
+        returned_hash['min_version'].should ==
+          @curr_class::MIN_VERSION_ALLOWED
+
+        v10 = returned_hash['V10']
+        v10.each do |k, v|
+          v10[k].should == @v10_hash[k]
+        end
+
+        v11 = returned_hash['V11']
+        v11.each do |k, v|
+          v11[k].should == @v11_hash[k]
+        end
+
+        v12 = returned_hash['V12']
+        v12.each do |k, v|
+          v12[k].should == @v12_hash[k]
+        end
+      end
+
+      it "should raise an error if the msg_obj is incomplete" do
+        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        expect {
+          json = Schemata::Component.encode(msg_obj)
+        }.to raise_error(Schemata::EncodeError)
+      end
+    end
+
+    describe "(current version is 13)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(13)
+        @curr_class = Schemata::Component::Foo.current_class
+      end
+
+      it "should take a v13 obj and return the correct json string" do
+        v13_obj = Schemata::Component::Foo::V13.new @v13_hash
+        json = Schemata::Component.encode(v13_obj)
+        returned_hash = Yajl::Parser.parse json
+
+        returned_hash.keys.should =~ ['min_version', 'V13']
+
+        returned_hash['min_version'].should ==
+          @curr_class::MIN_VERSION_ALLOWED
+
+        v13 = returned_hash['V13']
+        v13.each do |k, v|
+          v13[k].should == @v13_hash[k]
+        end
+      end
+
+      it "should raise an error if the msg_obj is incomplete" do
+        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        expect {
+          json = Schemata::Component.encode(msg_obj)
+        }.to raise_error(Schemata::EncodeError)
+      end
+    end
+
+    describe "(current version 14)" do
+      before :each do
+        Schemata::Component::Foo.stub(:current_version).and_return(14)
+        @curr_class = Schemata::Component::Foo.current_class
+      end
+
       it "should take a v14 obj and return the correct json string" do
         aux_data = { "foo4" => "foo" }
         v14_obj = Schemata::Component::Foo::V14.new(@v14_hash, aux_data)
@@ -570,102 +645,13 @@ of V10, V11, and V12 hashes" do
           v14[k].should == @v14_hash[k]
         end
       end
-    end
-  end
 
-  describe "Other tests" do
-    it "should raise an error if the 'min_version' is missing" do
-      msg_hash = {
-        "V10" => {},
-        "V11" => {
-          "foo1" => "foo",
-          "foo2" => 1,
-          "foo3" => 1
-        }
-      }
-      json_msg = Yajl::Encoder.encode msg_hash
-      expect {
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          json_msg)
-      }.to raise_error(Schemata::DecodeError)
-    end
-
-    it "should raise an error if the message has no Vxx key" do
-      msg_hash = {
-        "min_version" => 10
-      }
-      json_msg = Yajl::Encoder.encode msg_hash
-      expect {
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          json_msg)
-      }.to raise_error(Schemata::DecodeError)
-    end
-  end
-end
-
-describe "Schemata::Component::Foo" do
-  describe "V10" do
-    it "should not raise an error if an attribute is correctly assigned" do
-      foo_obj = Schemata::Component.mock_foo 10
-      foo_obj.foo1 = "new name"
-    end
-
-    it "should raise an error if an attribute is incorrectly assigned" do
-      foo_obj = Schemata::Component.mock_foo 10
-      expect {
-        foo_obj.foo1 = 1
-      }.to raise_error(Schemata::UpdateAttributeError)
-    end
-  end
-
-  describe "V11" do
-    it "should not raise an error if an attribute is correctly assigned" do
-      foo_obj = Schemata::Component.mock_foo 11
-      foo_obj.foo2 = 10
-    end
-
-    it "should raise an error if an attribute is incorrectly assigned" do
-      foo_obj = Schemata::Component.mock_foo 11
-      expect {
-        foo_obj.foo2 = "foo"
-      }.to raise_error(Schemata::UpdateAttributeError)
-    end
-  end
-
-  describe "V12" do
-    it "should not raise an error if an attribute is correctly assigned" do
-      foo_obj = Schemata::Component.mock_foo 12
-      foo_obj.foo3 = [1, 2]
-    end
-
-    it "should raise an error if an attribute is incorrectly assigned" do
-      foo_obj = Schemata::Component.mock_foo 12
-      expect {
-        foo_obj.foo3 = 1
-      }.to raise_error(Schemata::UpdateAttributeError)
-    end
-  end
-
-  describe "V13" do
-    it "should not raise an error if an attribute is correctly assigned" do
-      foo_obj = Schemata::Component.mock_foo 13
-      foo_obj.foo4 = "foobar"
-    end
-
-    it "should raise an error if an attribute is incorrectly assigned" do
-      foo_obj = Schemata::Component.mock_foo 13
-      expect {
-        foo_obj.foo4 =1
-      }.to raise_error(Schemata::UpdateAttributeError)
-    end
-
-    it "should raise an error if an accessed field was removed" do
-      foo_obj = Schemata::Component.mock_foo 13
-      expect {
-        foo_obj.foo2
-      }.to raise_error
+      it "should raise an error if the msg_obj is incomplete" do
+        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        expect {
+          json = Schemata::Component.encode(msg_obj)
+        }.to raise_error(Schemata::EncodeError)
+      end
     end
   end
 end

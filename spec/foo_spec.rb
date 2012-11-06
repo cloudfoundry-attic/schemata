@@ -1,0 +1,179 @@
+require File.expand_path('../../lib/schemata/component/foo', __FILE__)
+
+describe Schemata::Component::Foo do
+  describe "V10" do
+    it "should not raise an error if an incomplete but valid hash is given" do
+      v10_hash = {"foo1" => "foo"}
+      v10_obj = Schemata::Component::Foo::V10.new(v10_hash)
+    end
+
+    it "should raise an error if an incomplete and invalid hash is given" do
+      v10_hash = {"foo1" => 1}
+      expect {
+        v10_obj = Schemata::Component::Foo::V10.new(v10_hash)
+      }.to raise_error(Schemata::MessageConstructionError)
+    end
+
+    it "should not raise an error if an attribute is correctly assigned" do
+      foo_obj = Schemata::Component.mock_foo 10
+      foo_obj.foo1 = "new name"
+    end
+
+    it "should raise an error if an attribute is incorrectly assigned" do
+      foo_obj = Schemata::Component.mock_foo 10
+      expect {
+        foo_obj.foo1 = 1
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+
+    it "should not raise an error if an incomplete msg_obj is updated \
+correctly" do
+      v10_hash = {"foo1" => "foo"}
+      v10_obj = Schemata::Component::Foo::V10.new(v10_hash)
+      v10_obj.foo1 = "new name"
+    end
+
+    it "should raise an error if an incomplete msg_obj is updated \
+incorrectly" do
+      v10_hash = {"foo1" => "foo"}
+      v10_obj = Schemata::Component::Foo::V10.new(v10_hash)
+      expect {
+        v10_obj.foo1 = 1
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+  end
+
+  describe "V11" do
+    it "should not raise an error if an incomplete but valid hash is given" do
+      v11_hash = {"foo1" => "foo"}
+      v11_obj = Schemata::Component::Foo::V11.new(v11_hash)
+    end
+
+    it "should raise an error if an incomplete and invalid hash is given" do
+      v11_hash = {"foo1" => 1}
+      expect {
+        v11_obj = Schemata::Component::Foo::V11.new(v11_hash)
+      }.to raise_error(Schemata::MessageConstructionError)
+    end
+
+    it "should not raise an error if an attribute is correctly assigned" do
+      foo_obj = Schemata::Component.mock_foo 11
+      foo_obj.foo2 = 10
+    end
+
+    it "should raise an error if an attribute is incorrectly assigned" do
+      foo_obj = Schemata::Component.mock_foo 11
+      expect {
+        foo_obj.foo2 = "foo"
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+
+    it "should not raise an error if an incomplete msg_obj is updated \
+correctly" do
+      v11_hash = {"foo1" => "foo"}
+      v11_obj = Schemata::Component::Foo::V11.new(v11_hash)
+      v11_obj.foo1 = "new name"
+    end
+
+    it "should raise an error if an incomplete msg_obj is updated \
+incorrectly" do
+      v11_hash = {"foo1" => "foo"}
+      v11_obj = Schemata::Component::Foo::V11.new(v11_hash)
+      expect {
+        v11_obj.foo1 = 1
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+  end
+
+  describe "V12" do
+    it "should not raise an error if an incomplete but valid hash is given" do
+      v12_hash = {"foo1" => "foo"}
+      v12_obj = Schemata::Component::Foo::V12.new(v12_hash)
+    end
+
+    it "should raise an error if an incomplete and invalid hash is given" do
+      v12_hash = {"foo1" => 1}
+      expect {
+        v12_obj = Schemata::Component::Foo::V12.new(v12_hash)
+      }.to raise_error(Schemata::MessageConstructionError)
+    end
+
+    it "should not raise an error if an attribute is correctly assigned" do
+      foo_obj = Schemata::Component.mock_foo 12
+      foo_obj.foo3 = [1, 2]
+    end
+
+    it "should raise an error if an attribute is incorrectly assigned" do
+      foo_obj = Schemata::Component.mock_foo 12
+      expect {
+        foo_obj.foo3 = 1
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+
+    it "should not raise an error if an incomplete msg_obj is updated \
+correctly" do
+      v12_hash = {"foo1" => "foo"}
+      v12_obj = Schemata::Component::Foo::V12.new(v12_hash)
+      v12_obj.foo1 = "new name"
+    end
+
+    it "should raise an error if an incomplete msg_obj is updated \
+incorrectly" do
+      v12_hash = {"foo1" => "foo"}
+      v12_obj = Schemata::Component::Foo::V12.new(v12_hash)
+      expect {
+        v12_obj.foo1 = 1
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+  end
+
+  describe "V13" do
+    it "should not raise an error if an incomplete but valid hash is given" do
+      v13_hash = {"foo1" => "foo"}
+      v13_obj = Schemata::Component::Foo::V13.new(v13_hash)
+    end
+
+    it "should raise an error if an incomplete and invalid hash is given" do
+      v13_hash = {"foo1" => 1}
+      expect {
+        v13_obj = Schemata::Component::Foo::V13.new(v13_hash)
+      }.to raise_error(Schemata::MessageConstructionError)
+    end
+
+
+    it "should not raise an error if an attribute is correctly assigned" do
+      foo_obj = Schemata::Component.mock_foo 13
+      foo_obj.foo4 = "foobar"
+    end
+
+    it "should raise an error if an attribute is incorrectly assigned" do
+      foo_obj = Schemata::Component.mock_foo 13
+      expect {
+        foo_obj.foo4 =1
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+
+    it "should raise an error if an accessed field was removed" do
+      foo_obj = Schemata::Component.mock_foo 13
+      expect {
+        foo_obj.foo2
+      }.to raise_error
+    end
+
+    it "should not raise an error if an incomplete msg_obj is updated \
+correctly" do
+      v13_hash = {"foo1" => "foo"}
+      v13_obj = Schemata::Component::Foo::V13.new(v13_hash)
+      v13_obj.foo1 = "new name"
+    end
+
+    it "should raise an error if an incomplete msg_obj is updated \
+incorrectly" do
+      v13_hash = {"foo1" => "foo"}
+      v13_obj = Schemata::Component::Foo::V13.new(v13_hash)
+      expect {
+        v13_obj.foo1 = 1
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+  end
+end
