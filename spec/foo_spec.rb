@@ -11,7 +11,7 @@ describe Schemata::Component::Foo do
       v10_hash = {"foo1" => 1}
       expect {
         v10_obj = Schemata::Component::Foo::V10.new(v10_hash)
-      }.to raise_error(Schemata::MessageConstructionError)
+      }.to raise_error(Schemata::UpdateAttributeError)
     end
 
     it "should not raise an error if an attribute is correctly assigned" do
@@ -53,7 +53,7 @@ incorrectly" do
       v11_hash = {"foo1" => 1}
       expect {
         v11_obj = Schemata::Component::Foo::V11.new(v11_hash)
-      }.to raise_error(Schemata::MessageConstructionError)
+      }.to raise_error(Schemata::UpdateAttributeError)
     end
 
     it "should not raise an error if an attribute is correctly assigned" do
@@ -95,7 +95,7 @@ incorrectly" do
       v12_hash = {"foo1" => 1}
       expect {
         v12_obj = Schemata::Component::Foo::V12.new(v12_hash)
-      }.to raise_error(Schemata::MessageConstructionError)
+      }.to raise_error(Schemata::UpdateAttributeError)
     end
 
     it "should not raise an error if an attribute is correctly assigned" do
@@ -137,7 +137,7 @@ incorrectly" do
       v13_hash = {"foo1" => 1}
       expect {
         v13_obj = Schemata::Component::Foo::V13.new(v13_hash)
-      }.to raise_error(Schemata::MessageConstructionError)
+      }.to raise_error(Schemata::UpdateAttributeError)
     end
 
 

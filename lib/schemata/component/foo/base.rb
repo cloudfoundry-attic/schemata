@@ -43,7 +43,7 @@ module Schemata::Component::Foo
         begin
           schema.schemas[k].validate(v)
         rescue Membrane::SchemaValidationError => e
-          raise Schemata::MessageConstructionError.new(e.message)
+          raise Schemata::UpdateAttributeError.new(e.message)
         end
 
         @contents[k] = Schemata::HashCopyHelpers.deep_copy(v)

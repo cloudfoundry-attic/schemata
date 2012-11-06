@@ -36,7 +36,7 @@ module Schemata
         msg_obj = curr_class.new(msg_contents)
         msg_obj.validate
         return msg_obj
-      rescue Schemata::MessageConstructionError => e
+      rescue Schemata::UpdateAttributeError => e
         raise Schemata::DecodeError.new(e.message)
       rescue Membrane::SchemaValidationError => e
         raise Schemata::DecodeError.new(e.message)
