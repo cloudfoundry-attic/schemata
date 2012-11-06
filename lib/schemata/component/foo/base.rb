@@ -9,14 +9,14 @@ module Schemata::Component::Foo
   module Base
 
     def initialize(msg_data, aux_data=nil)
-      schema.schemas.keys.each do |k|
+      schema.schemas.each do |k, inner_schema|
         self.class.send(:define_method, "#{k}".to_sym) do
           Schemata::HashCopyHelpers.deep_copy(@contents[k])
         end
 
         self.class.send(:define_method, "#{k}=".to_sym) do |v|
           begin
-            schema.schemas[k].validate(v)
+            inner_schema.validate(v)
           rescue Membrane::SchemaValidationError => e
             raise Schemata::UpdateAttributeError.new(e.message)
           end
