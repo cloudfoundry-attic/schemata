@@ -1,4 +1,5 @@
 require 'membrane'
+require File.expand_path('../base', __FILE__)
 require File.expand_path('../../../helpers/hash_copy', __FILE__)
 
 module Schemata
@@ -38,7 +39,7 @@ module Schemata::Component::Foo
     end
 
     def generate_old_fields(aux_data = nil)
-      first = @foo3.length > 0 ? @foo3[0] : 1
+      first = foo3.length > 0 ? foo3[0] : 1
       old_fields = { "foo3" => first }
 
       old_contents = contents
@@ -51,59 +52,19 @@ module Schemata::Component::Foo
 
   #############################################
 
-    SCHEMA.schemas.keys.each do |k|
-      define_method(k.to_sym) do
-        Schemata::HashCopyHelpers.deep_copy(@contents[k])
-      end
-
-      define_method("#{k}=".to_sym) do |v|
-        begin
-         SCHEMA.schemas[k].validate(v)
-        rescue Membrane::SchemaValidationError => e
-          raise Schemata::UpdateAttributeError.new(e.message)
-        end
-
-        @contents[k] = Schemata::HashCopyHelpers.deep_copy(v)
-        instance_variable_set("@#{k}", @contents[k])
-        v
-      end
+    def schema
+      SCHEMA
     end
 
-    def self.mock
-      mock = {}
-      MOCK_VALUES.keys.each do |k|
-        value = MOCK_VALUES[k]
-        mock[k] = value.respond_to?("call") ? value.call : value
-      end
-      self.new(mock)
+    def aux_data
+      nil
     end
 
-    def initialize(msg_data)
-      @contents = {}
-      msg_data.each do |k, v|
-        next unless SCHEMA.schemas[k]
-
-        begin
-          SCHEMA.schemas[k].validate(v)
-        rescue Membrane::SchemaValidationError => e
-          raise Schemata::MessageConstructionError.new(e.message)
-        end
-
-        @contents[k] = Schemata::HashCopyHelpers.deep_copy(v)
-        instance_variable_set("@#{k}", @contents[k])
-      end
+    def self.mock_values
+      MOCK_VALUES
     end
 
-    def validate
-      SCHEMA.validate(@contents)
-    end
-
-    def contents
-      Schemata::HashCopyHelpers.deep_copy(@contents)
-    end
-
-    def message_type
-      Schemata::Component::Foo
-    end
+    include Schemata::Component::Foo::Base
+    extend Schemata::Component::Foo::Mocking
   end
 end
