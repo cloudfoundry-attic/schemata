@@ -1,4 +1,5 @@
 require File.expand_path('../../lib/schemata/component/component', __FILE__)
+require File.expand_path('../support/helpers', __FILE__)
 
 describe Schemata::Component do
   before :each do
@@ -113,8 +114,11 @@ describe Schemata::Component do
 
     describe "(current version is 10)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(10)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(10)
+    end
+
+      after :each do
+        reset_version
       end
 
       it "should take a v10 message and return a correct Foo::V10 object" do
@@ -218,8 +222,11 @@ of V10, V11, and V12 hashes" do
 
     describe "(current version is 11)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(11)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(11)
+      end
+
+      after :each do
+        reset_version
       end
 
       it "should take a v10 message, upvert, and return a correct V11 object" do
@@ -315,8 +322,11 @@ of V10, V11, and V12 hashes" do
 
     describe "(current version is 12)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(12)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(12)
+      end
+
+      after :each do
+        reset_version
       end
 
       it "should take a v10 message, upvert twice, and return a correct V12 object" do
@@ -404,8 +414,11 @@ of V10, V11, and V12 hashes" do
 
     describe "(current version is 13)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(13)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(13)
+      end
+
+      after :each do
+        reset_version
       end
 
       it "should validate a v10 message and return a correct V13 object" do
@@ -488,8 +501,11 @@ of V10, V11, and V12 hashes" do
   describe "#encode" do
     describe "(current version is 10)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(10)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(10)
+      end
+
+      after :each do
+        reset_version
       end
 
       it "should take a v10 obj and return the correct json string" do
@@ -517,8 +533,11 @@ of V10, V11, and V12 hashes" do
 
     describe "(current version is 11)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(11)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(11)
+      end
+
+      after:each do
+        reset_version
       end
 
       it "should take a v11 obj and return the correct json string" do
@@ -552,8 +571,11 @@ of V10, V11, and V12 hashes" do
 
     describe "(current version is 12)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(12)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(12)
+      end
+
+      after :each do
+        reset_version
       end
 
       it "should take a v12 obj and return the correct json string" do
@@ -592,8 +614,11 @@ of V10, V11, and V12 hashes" do
 
     describe "(current version is 13)" do
       before :each do
-        Schemata::Component::Foo.stub(:current_version).and_return(13)
-        @curr_class = Schemata::Component::Foo.current_class
+        set_current_version(13)
+      end
+
+      after :each do
+        reset_version
       end
 
       it "should take a v13 obj and return the correct json string" do
