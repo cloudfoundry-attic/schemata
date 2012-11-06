@@ -30,20 +30,6 @@ module Schemata::Component::Foo
       raise Schemata::DecodeError.new("Upvert called a version that does not exist")
     end
 
-  ############################################
-
-    def schema
-      SCHEMA
-    end
-
-    def aux_schema
-      nil
-    end
-
-    def self.mock_values
-      MOCK_VALUES
-    end
-
     include Schemata::Component::Foo::Base
     extend Schemata::Component::Foo::Mocking
   end

@@ -87,6 +87,22 @@ module Schemata::Component::Foo
       @aux_contents.validate if aux_schema
     end
 
+    def schema
+      component, klass, version = self.class.name.split("::")[-3..-1]
+      Schemata::const_get(component)::const_get(klass)::
+        const_get(version)::SCHEMA
+    end
+
+    def aux_schema
+      component, klass, version = self.class.name.split("::")[-3..-1]
+      begin
+        Schemata::const_get(component)::const_get(klass)::
+          const_get(version)::AUX_SCHEMA
+      rescue NameError
+        nil
+      end
+    end
+
     def contents
       @contents.contents
     end
@@ -108,6 +124,12 @@ module Schemata::Component::Foo
         mock[k] = value.respond_to?("call") ? value.call : value
       end
       self.new(mock)
+    end
+
+    def mock_values
+      component, klass, version = self.name.split("::")[-3..-1]
+      Schemata::const_get(component)::const_get(klass)::
+        const_get(version)::MOCK_VALUES
     end
   end
 end

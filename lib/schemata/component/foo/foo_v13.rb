@@ -49,20 +49,6 @@ module Schemata::Component::Foo
       return Schemata::Component::V12.new(contents), {}
     end
 
-    #################################################
-
-    def schema
-      SCHEMA
-    end
-
-    def aux_schema
-      nil
-    end
-
-    def self.mock_values
-      MOCK_VALUES
-    end
-
     include Schemata::Component::Foo::Base
     extend Schemata::Component::Foo::Mocking
   end
