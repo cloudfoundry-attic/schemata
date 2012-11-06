@@ -58,6 +58,10 @@ module Schemata::Component::Foo
       Schemata::HashCopyHelpers.deep_copy(@contents)
     end
 
+    def aux_data
+      Schemata::HashCopyHelpers.deep_copy(@aux_data) if @aux_data
+    end
+
     def message_type
       Schemata::Component::Foo
     end
