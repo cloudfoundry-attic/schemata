@@ -63,12 +63,13 @@ module Schemata::Component::Foo
     end
 
     def initialize(msg_data_hash, aux_data_hash = nil)
-      @contents = ValidatingContainer.new(schema, msg_data_hash)
-      if aux_schema
-        @aux_contents = ValidatingContainer.new(aux_schema, aux_data_hash)
+      @contents = ValidatingContainer.new(self.class.schema, msg_data_hash)
+      if self.class.aux_schema
+        @aux_contents = ValidatingContainer.new(self.class.aux_schema,
+                                                aux_data_hash)
       end
 
-      schema.schemas.each do |key, field_schema|
+      self.class.schema.schemas.each do |key, field_schema|
         self.class.send(:define_method, "#{key}".to_sym) do
           @contents.send("#{key}".to_sym)
         end
@@ -84,23 +85,7 @@ module Schemata::Component::Foo
     end
 
     def validate_aux_data
-      @aux_contents.validate if aux_schema
-    end
-
-    def schema
-      component, klass, version = self.class.name.split("::")[-3..-1]
-      Schemata::const_get(component)::const_get(klass)::
-        const_get(version)::SCHEMA
-    end
-
-    def aux_schema
-      component, klass, version = self.class.name.split("::")[-3..-1]
-      begin
-        Schemata::const_get(component)::const_get(klass)::
-          const_get(version)::AUX_SCHEMA
-      rescue NameError
-        nil
-      end
+      @aux_contents.validate if self.class.aux_schema
     end
 
     def contents
@@ -116,6 +101,16 @@ module Schemata::Component::Foo
     end
   end
 
+  module ClassMethods
+    def schema
+      self::SCHEMA
+    end
+
+    def aux_schema
+      return self::AUX_SCHEMA if defined?(self::AUX_SCHEMA)
+    end
+  end
+
   module Mocking
     def mock
       mock = {}
@@ -127,9 +122,7 @@ module Schemata::Component::Foo
     end
 
     def mock_values
-      component, klass, version = self.name.split("::")[-3..-1]
-      Schemata::const_get(component)::const_get(klass)::
-        const_get(version)::MOCK_VALUES
+      self::MOCK_VALUES
     end
   end
 end

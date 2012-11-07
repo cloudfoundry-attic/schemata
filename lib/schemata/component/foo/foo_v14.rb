@@ -59,5 +59,6 @@ module Schemata::Component::Foo
 
     include Schemata::Component::Foo::Base
     extend Schemata::Component::Foo::Mocking
+    extend Schemata::Component::Foo::ClassMethods
   end
 end
