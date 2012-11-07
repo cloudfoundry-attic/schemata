@@ -1,6 +1,6 @@
-require 'yajl'
+require 'schemata/helpers/hash_copy'
 require 'set'
-require File.expand_path('../../helpers/hash_copy', __FILE__)
+require 'yajl'
 
 module Schemata
   class ParsedMessage

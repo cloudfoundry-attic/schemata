@@ -1,5 +1,5 @@
-require File.expand_path('../../lib/schemata/component/foo', __FILE__)
-require File.expand_path('../../lib/schemata/component/error', __FILE__)
+require 'schemata/component/foo'
+require 'schemata/common/error'
 
 describe Schemata::Component::Foo do
   describe "V10" do

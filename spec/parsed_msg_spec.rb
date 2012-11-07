@@ -1,4 +1,4 @@
-require File.expand_path('../../lib/schemata/component/parsed_msg', __FILE__)
+require 'schemata/common/parsed_msg'
 
 describe Schemata::ParsedMessage do
   describe "#new" do

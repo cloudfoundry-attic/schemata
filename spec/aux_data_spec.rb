@@ -1,4 +1,4 @@
-require File.expand_path('../../lib/schemata/component/foo', __FILE__)
+require 'schemata/component/foo'
 
 describe Schemata::Component::Foo::V14 do
   describe "#generate_old_fields" do

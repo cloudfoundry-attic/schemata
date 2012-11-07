@@ -1,28 +1,28 @@
 require 'membrane'
-require File.expand_path('../../../helpers/hash_copy', __FILE__)
-require File.expand_path('../../../common/msgbase', __FILE__)
+require 'schemata/common/msgbase'
+require 'schemata/helpers/hash_copy'
 
 module Schemata
-  module Component
-    module Foo
+  module CloudController
+    module Bar
     end
   end
 end
 
-module Schemata::Component::Foo
+module Schemata::CloudController::Bar
   class V10
     include Schemata::MessageBase
 
     SCHEMA = Membrane::SchemaParser.parse do
       {
-        "foo1" => String,
-        "foo2" => Integer
+        "bar1" => String,
+        "bar2" => String,
       }
     end
 
     MOCK_VALUES = {
-      "foo1" => "foo",
-      "foo2" => 2
+      "bar1" => "first",
+      "bar2" => "second"
     }
 
     MIN_VERSION_ALLOWED = 10

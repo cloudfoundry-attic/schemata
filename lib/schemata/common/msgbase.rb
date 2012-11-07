@@ -1,12 +1,8 @@
 module Schemata
-  module Component
-    module Foo
-    end
-  end
 end
 
-module Schemata::Component::Foo
-  module Base
+module Schemata
+  module MessageBase
 
     class ValidatingContainer
       def initialize(schema, data = {})
@@ -97,11 +93,12 @@ module Schemata::Component::Foo
     end
 
     def message_type
-      Schemata::Component::Foo
+      _, component, msg_type, version = self.class.name.split("::")
+      Schemata::const_get(component)::const_get(msg_type)
     end
 
     def self.included(klass)
-      klass.extend(Schemata::Component::Foo::ClassMethods)
+      klass.extend(Schemata::ClassMethods)
     end
   end
 

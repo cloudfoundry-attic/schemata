@@ -1,5 +1,5 @@
 require 'membrane'
-require File.expand_path('../base', __FILE__)
+require File.expand_path('../../../common/msgbase', __FILE__)
 require File.expand_path('../../../helpers/hash_copy', __FILE__)
 
 module Schemata
@@ -11,7 +11,7 @@ end
 
 module Schemata::Component::Foo
   class V12
-    include Schemata::Component::Foo::Base
+    include Schemata::MessageBase
 
     SCHEMA = Membrane::SchemaParser.parse do
       {
