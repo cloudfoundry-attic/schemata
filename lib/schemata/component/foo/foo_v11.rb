@@ -11,6 +11,7 @@ end
 
 module Schemata::Component::Foo
   class V11
+    include Schemata::Component::Foo::Base
 
     SCHEMA = Membrane::SchemaParser.parse do
       {
@@ -44,9 +45,5 @@ module Schemata::Component::Foo
       # empty
       return Schemata::Component::Foo::V10.new(contents), {}
     end
-
-    include Schemata::Component::Foo::Base
-    extend Schemata::Component::Foo::Mocking
-    extend Schemata::Component::Foo::ClassMethods
   end
 end

@@ -11,6 +11,7 @@ end
 
 module Schemata::Component::Foo
   class V10
+    include Schemata::Component::Foo::Base
 
     SCHEMA = Membrane::SchemaParser.parse do
       {
@@ -29,9 +30,5 @@ module Schemata::Component::Foo
     def self.upvert(old_data)
       raise Schemata::DecodeError.new("Upvert called a version that does not exist")
     end
-
-    include Schemata::Component::Foo::Base
-    extend Schemata::Component::Foo::Mocking
-    extend Schemata::Component::Foo::ClassMethods
   end
 end

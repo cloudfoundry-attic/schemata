@@ -11,6 +11,8 @@ end
 
 module Schemata::Component::Foo
   class V13
+    include Schemata::Component::Foo::Base
+
     SCHEMA = Membrane::SchemaParser.parse do
       {
         "foo1" => String,
@@ -48,9 +50,5 @@ module Schemata::Component::Foo
     def generate_old_fields(aux_data = nil)
       return Schemata::Component::V12.new(contents), {}
     end
-
-    include Schemata::Component::Foo::Base
-    extend Schemata::Component::Foo::Mocking
-    extend Schemata::Component::Foo::ClassMethods
   end
 end

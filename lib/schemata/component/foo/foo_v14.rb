@@ -11,6 +11,8 @@ end
 
 module Schemata::Component::Foo
   class V14
+    include Schemata::Component::Foo::Base
+
     SCHEMA = Membrane::SchemaParser.parse do
       {
         "foo1" => String,
@@ -56,9 +58,5 @@ module Schemata::Component::Foo
 
       return Schemata::Component::Foo::V13.new(msg_contents), aux_contents
     end
-
-    include Schemata::Component::Foo::Base
-    extend Schemata::Component::Foo::Mocking
-    extend Schemata::Component::Foo::ClassMethods
   end
 end

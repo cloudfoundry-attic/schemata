@@ -99,19 +99,13 @@ module Schemata::Component::Foo
     def message_type
       Schemata::Component::Foo
     end
+
+    def self.included(klass)
+      klass.extend(Schemata::Component::Foo::ClassMethods)
+    end
   end
 
   module ClassMethods
-    def schema
-      self::SCHEMA
-    end
-
-    def aux_schema
-      return self::AUX_SCHEMA if defined?(self::AUX_SCHEMA)
-    end
-  end
-
-  module Mocking
     def mock
       mock = {}
       mock_values.keys.each do |k|
@@ -119,6 +113,14 @@ module Schemata::Component::Foo
         mock[k] = value.respond_to?("call") ? value.call : value
       end
       self.new(mock)
+    end
+
+    def schema
+      self::SCHEMA
+    end
+
+    def aux_schema
+      return self::AUX_SCHEMA if defined?(self::AUX_SCHEMA)
     end
 
     def mock_values
