@@ -1,54 +1,44 @@
 require 'membrane'
-require File.expand_path('../../../common/msgbase', __FILE__)
-require File.expand_path('../../../helpers/hash_copy', __FILE__)
+require 'schemata/common/msgtypebase'
+require 'schemata/helpers/hash_copy'
 
 module Schemata
   module Component
     module Foo
-    end
-  end
-end
+      extend Schemata::MessageTypeBase
 
-module Schemata::Component::Foo
-  class V13
-    include Schemata::MessageBase
+      version 13 do
+        define_schema do
+          {
+            "foo1" => String,
+            "foo3" => [Integer],
+            "foo4" => String,
+          }
+        end
 
-    SCHEMA = Membrane::SchemaParser.parse do
-      {
-        "foo1" => String,
-        "foo3" => [Integer],
-        "foo4" => String
-      }
-    end
+        define_min_version 13
 
-    MOCK_VALUES = {
-      "foo1" => "foo",
-      "foo3" => lambda { [Random.rand(11)] },
-      "foo4" => Proc.new do
-        time = Time.now
-        time.to_s
-      end
-    }
+        define_upvert do |old_data|
+          new_data = Schemata::HashCopyHelpers.deep_copy(old_data)
+          new_data.delete("foo2")
+          new_data["foo4"] = "foo"
+          new_data
+        end
 
-    MIN_VERSION_ALLOWED = 13
+        define_generate_old_fields do |msg_obj|
+          {}
+        end
 
-    FOO4_DEFAULT = "foo"
-
-    def self.upvert(old_data)
-      begin
-        Schemata::Component::Foo::V12::SCHEMA.validate(old_data)
-      rescue Membrane::SchemaValidationError => e
-        raise Schemata::DecodeError.new(e.message)
+        define_constant :MOCK_VALUES, {
+          "foo1" => "foo",
+          "foo3" => lambda { [Random.rand(11)] },
+          "foo4" => Proc.new do
+            time = Time.now
+            time.to_s
+          end
+        }
       end
 
-      new_data = Schemata::HashCopyHelpers.deep_copy(old_data)
-      new_data.delete("foo2")
-      new_data["foo4"] = FOO4_DEFAULT
-      new_data
-    end
-
-    def generate_old_fields(aux_data = nil)
-      return Schemata::Component::V12.new(contents), {}
     end
   end
 end

@@ -1,38 +1,35 @@
 require 'membrane'
-require File.expand_path('../../../helpers/hash_copy', __FILE__)
-require File.expand_path('../../../common/msgbase', __FILE__)
+require 'schemata/helpers/hash_copy'
+require 'schemata/common/msgtypebase'
 
 module Schemata
   module Component
     module Foo
-    end
-  end
-end
+      extend Schemata::MessageTypeBase
 
-module Schemata::Component::Foo
-  class V10
-    include Schemata::MessageBase
+      version 10 do
+        define_schema do
+          {
+            "foo1" => String,
+            "foo2" => Integer,
+          }
+        end
 
-    SCHEMA = Membrane::SchemaParser.parse do
-      {
-        "foo1" => String,
-        "foo2" => Integer
-      }
-    end
+        define_min_version 10
 
-    MOCK_VALUES = {
-      "foo1" => "foo",
-      "foo2" => 2
-    }
+        define_upvert do |old_data|
+          raise NotImplementedError.new
+        end
 
-    MIN_VERSION_ALLOWED = 10
+        define_generate_old_fields do |msg_obj|
+          raise NotImplementedError.new
+        end
 
-    def self.upvert(old_data)
-      raise NotImplementedError.new
-    end
-
-    def generate_old_fields
-      raise NotImplementedError.new
+        define_constant :MOCK_VALUES, {
+          "foo1" => "foo",
+          "foo2" => 2
+        }
+      end
     end
   end
 end

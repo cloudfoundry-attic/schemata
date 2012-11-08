@@ -1,5 +1,4 @@
-module Schemata
-end
+require 'schemata/common/error'
 
 module Schemata
   module MessageBase
@@ -122,6 +121,7 @@ module Schemata
 
     def self.included(klass)
       klass.extend(Schemata::ClassMethods)
+      klass.extend Dsl
     end
   end
 
@@ -145,6 +145,85 @@ module Schemata
 
     def mock_values
       self::MOCK_VALUES
+    end
+
+    def version
+      _, component, msg_type, version = self.name.split("::")
+      version[1..-1].to_i
+    end
+
+    def previous_version
+      _, component, msg_type, version = self.name.split("::")
+      version = version[1..-1].to_i - 1
+      Schemata::const_get(component)::const_get(msg_type)::
+        const_get("V#{version}")
+    end
+  end
+
+  module Dsl
+    def define_schema(&blk)
+      res = blk.call
+      unless res.instance_of? Hash
+        raise Schemata::SchemaDefinitionError.new("Schema must be a hash")
+      end
+
+      schema = Membrane::SchemaParser.parse do
+        res
+      end
+      self::const_set(:SCHEMA, schema)
+    end
+
+    def define_aux_schema(&blk)
+      res = blk.call
+      unless res.instance_of? Hash
+        raise Schemata::SchemaDefinitionError.new("Schema must be a hash")
+      end
+
+      aux_schema = Membrane::SchemaParser.parse do
+        res
+      end
+      self::const_set(:AUX_SCHEMA, aux_schema)
+    end
+
+    def define_min_version(min_version)
+      unless min_version.is_a? Integer
+        raise SchemaDefinitionError.new("Min version must be an integer")
+      end
+      const_set(:MIN_VERSION_ALLOWED, min_version)
+    end
+
+    def define_upvert(&blk)
+      eigenclass.send(:define_method, :upvert) do |old_data|
+        # No need to validate aux_data because upvert is only called during
+        # decode, when aux_data is irrelevant
+        begin
+          previous_version::SCHEMA.validate(old_data)
+        rescue Membrane::SchemaValidationError => e
+          raise Schemata::DecodeError.new(e.message)
+        end
+
+        blk.call(old_data)
+      end
+    end
+
+    def define_generate_old_fields(&blk)
+      self.send(:define_method, :generate_old_fields) do
+        if self.class.aux_schema && aux_data.empty?
+          raise Schemata::DecodeError.new("Necessary aux_data missing")
+        end
+        old_fields = blk.call(self)
+
+        msg_contents = contents
+        msg_contents.update(old_fields)
+        msg_obj = self.class.previous_version.new(msg_contents)
+
+        msg_obj.validate_contents
+        return msg_obj, old_fields
+      end
+    end
+
+    def define_constant(constant_name, constant_value)
+      self.const_set(constant_name, constant_value)
     end
   end
 end

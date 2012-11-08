@@ -1,62 +1,40 @@
 require 'membrane'
-require File.expand_path('../../../common/msgbase', __FILE__)
-require File.expand_path('../../../helpers/hash_copy', __FILE__)
+require 'schemata/common/msgtypebase'
+require 'schemata/helpers/hash_copy'
 
 module Schemata
   module Component
     module Foo
-    end
-  end
-end
+      extend Schemata::MessageTypeBase
 
-module Schemata::Component::Foo
-  class V14
-    include Schemata::MessageBase
+      version 14 do
+        define_schema do
+          {
+            "foo1" => String,
+            "foo3" => [Integer]
+          }
+        end
 
-    SCHEMA = Membrane::SchemaParser.parse do
-      {
-        "foo1" => String,
-        "foo3" => [Integer],
-      }
-    end
+        define_aux_schema do
+          {"foo4" => String}
+        end
 
-    AUX_SCHEMA = Membrane::SchemaParser.parse do
-      {
-        "foo4" => String
-      }
-    end
+        define_min_version 13
 
-    MOCK_VALUES = {
-      "foo1" => "foo",
-      "foo3" => lambda { [Random.rand(11)] },
-    }
+        define_upvert do |old_data|
+          new_data = Schemata::HashCopyHelpers.deep_copy(old_data)
+          new_data.delete("foo4")
+          new_data
+        end
 
-    MIN_VERSION_ALLOWED = 13
-
-    def self.upvert(old_data)
-      begin
-        # We don't validate the aux data because a higher versioned message
-        # does not require the aux data of its previous version.
-        Schemata::Component::Foo::V13::SCHEMA.validate(old_data)
-      rescue Membrane::SchemaValidationError => e
-        raise Schemata::DecodeError.new(e.message)
+        define_generate_old_fields do |msg_obj|
+          msg_contents = msg_obj.contents
+          aux_contents = msg_obj.aux_data.contents
+          msg_contents.update(aux_contents)
+          aux_contents
+        end
       end
 
-      new_data = Schemata::HashCopyHelpers.deep_copy(old_data)
-      new_data.delete("foo4")
-      new_data
-    end
-
-    def generate_old_fields
-      if aux_data.empty?
-        raise Schemata::DecodeError.new("Necessary aux_data missing")
-      end
-
-      msg_contents = contents
-      aux_contents = aux_data.contents
-      msg_contents.update(aux_contents)
-
-      return Schemata::Component::Foo::V13.new(msg_contents), aux_contents
     end
   end
 end

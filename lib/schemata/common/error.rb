@@ -8,4 +8,5 @@ module Schemata
 sion #{component_version}")
     end
   end
+  class SchemaDefinitionError < StandardError; end
 end

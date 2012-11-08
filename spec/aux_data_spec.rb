@@ -2,7 +2,7 @@ require 'schemata/component/foo'
 
 describe Schemata::Component::Foo::V14 do
   describe "#generate_old_fields" do
-    it "should emit correct fields the object was constructed with aux_data" do
+    it "should emit correct fields if the object was constructed with aux_data" do
       v14_hash = {
         "foo1" => "hello",
         "foo3" => [3]

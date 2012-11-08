@@ -1,38 +1,35 @@
 require 'membrane'
-require 'schemata/common/msgbase'
+require 'schemata/common/msgtypebase'
 require 'schemata/helpers/hash_copy'
 
 module Schemata
   module Component
     module Bar
-    end
-  end
-end
+      extend Schemata::MessageTypeBase
 
-module Schemata::Component::Bar
-  class V10
-    include Schemata::MessageBase
+      version 10 do
+        define_schema do
+          {
+            "bar1" => String,
+            "bar2" => String,
+          }
+        end
 
-    SCHEMA = Membrane::SchemaParser.parse do
-      {
-        "bar1" => String,
-        "bar2" => String,
-      }
-    end
+        define_min_version 10
 
-    MOCK_VALUES = {
-      "bar1" => "first",
-      "bar2" => "second"
-    }
+        define_upvert do |old_data|
+          raise NotImplementedError.new
+        end
 
-    MIN_VERSION_ALLOWED = 10
+        define_generate_old_fields do |msg_obj|
+          raise NotImplementedError.new
+        end
 
-    def self.upvert(old_data)
-      raise NotImplementedError.new
-    end
-
-    def generate_old_fields
-      raise NotImplementedError.new
+        define_constant :MOCK_VALUES, {
+          "bar1" => "first",
+          "bar2" => "second"
+        }
+      end
     end
   end
 end

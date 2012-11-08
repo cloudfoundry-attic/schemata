@@ -1,3 +1,5 @@
+require 'schemata/common/msgbase'
+
 module Schemata
   module MessageTypeBase
     def current_version
@@ -47,6 +49,24 @@ module Schemata
         raise Schemata::DecodeError.new(e.message)
       rescue Membrane::SchemaValidationError => e
         raise Schemata::DecodeError.new(e.message)
+      end
+    end
+
+    def self.extended(o)
+      o.extend Dsl
+    end
+
+    module Dsl
+      def version(v, &blk)
+        klass = Class.new
+        klass.instance_eval do
+          def eigenclass
+            class << self; self; end
+          end
+        end
+        klass.send(:include, Schemata::MessageBase)
+        klass.instance_eval(&blk)
+        self::const_set("V#{v}", klass)
       end
     end
 
