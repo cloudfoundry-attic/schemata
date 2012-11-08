@@ -76,6 +76,29 @@ module Schemata
       end
     end
 
+    def encode
+      begin
+        validate_contents
+        validate_aux_data
+      rescue Membrane::SchemaValidationError => e
+        raise Schemata::EncodeError.new(e.message)
+      end
+
+      msg_type = message_type
+      curr_version = msg_type.current_version
+      min_version = self.class::MIN_VERSION_ALLOWED
+
+      msg = { "V#{curr_version}" => contents }
+      curr_msg_obj = self
+      (min_version...curr_version).reverse_each do |v|
+        curr_msg_obj, old_fields =
+          curr_msg_obj.generate_old_fields
+         msg["V#{v}"] = old_fields
+      end
+      msg["min_version"] = min_version
+      Yajl::Encoder.encode(msg)
+    end
+
     def validate_contents
       @contents.validate
     end

@@ -94,9 +94,7 @@ describe Schemata::Component do
       }
       json_msg = Yajl::Encoder.encode msg_hash
       expect {
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          json_msg)
+        foo_obj = Schemata::Component::Foo.decode(json_msg)
       }.to raise_error(Schemata::DecodeError)
     end
 
@@ -106,9 +104,7 @@ describe Schemata::Component do
       }
       json_msg = Yajl::Encoder.encode msg_hash
       expect {
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          json_msg)
+        foo_obj = Schemata::Component::Foo.decode(json_msg)
       }.to raise_error(Schemata::DecodeError)
     end
 
@@ -122,27 +118,21 @@ describe Schemata::Component do
       end
 
       it "should take a v10 message and return a correct Foo::V10 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v10_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v10_msg)
         foo_obj.class.should == Schemata::Component::Foo::V10
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
       end
 
       it "should take a v11 message and return a correct Foo::V10 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v11_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v11_msg)
         foo_obj.class.should == Schemata::Component::Foo::V10
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
       end
 
       it "should take a v12 message and return a correct Foo::V10 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v12_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v12_msg)
         foo_obj.class.should == Schemata::Component::Foo::V10
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
@@ -157,9 +147,7 @@ describe Schemata::Component do
         }
         json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
@@ -176,8 +164,7 @@ of V11 and V10 hashes" do
         }
         json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
+          foo_obj = Schemata::Component::Foo.decode(
             json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
@@ -196,26 +183,20 @@ of V10, V11, and V12 hashes" do
         }
         json_msg = Yajl::Encoder.encode msg_hash
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
 
         msg_hash["V11"]["foo2"] = "bar"
         msg_hash["V12"]["foo2"] = 1
         json_msg = Yajl::Encoder.encode msg_hash
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
       it "should raise an IncompatibleVersionError when it gets a v13 msg" do
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            @v13_msg)
+          foo_obj = Schemata::Component::Foo.decode(@v13_msg)
         }.to raise_error(Schemata::IncompatibleVersionError)
       end
     end
@@ -230,9 +211,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should take a v10 message, upvert, and return a correct V11 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v10_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v10_msg)
         foo_obj.class.should == Schemata::Component::Foo::V11
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
@@ -240,9 +219,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should take a v11 message and return a correct V11 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v11_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v11_msg)
         foo_obj.class.should == Schemata::Component::Foo::V11
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
@@ -250,9 +227,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should take a v12 message and return a correct V11 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v12_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v12_msg)
         foo_obj.class.should == Schemata::Component::Foo::V11
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
@@ -268,9 +243,7 @@ of V10, V11, and V12 hashes" do
         }
         json_msg = Yajl::Encoder.encode msg_hash
         expect {
-          foo_obj = Schemata::Component.decode(
-           Schemata::Component::Foo,
-           json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
@@ -285,9 +258,7 @@ of V10, V11, and V12 hashes" do
         }
         json_msg = Yajl::Encoder.encode msg_hash
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
@@ -305,17 +276,13 @@ of V10, V11, and V12 hashes" do
           }
           json_msg = Yajl::Encoder.encode msg_hash
           expect {
-            foo_obj = Schemata::Component.decode(
-              Schemata::Component::Foo,
-              json_msg)
+            foo_obj = Schemata::Component::Foo.decode(json_msg)
           }.to raise_error(Schemata::DecodeError)
       end
 
       it "should raise an IncompatibleVersionError on a v13 message" do
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            @v13_msg)
+          foo_obj = Schemata::Component::Foo.decode(@v13_msg)
         }.to raise_error(Schemata::IncompatibleVersionError)
       end
     end
@@ -330,9 +297,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should take a v10 message, upvert twice, and return a correct V12 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v10_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v10_msg)
         foo_obj.class.should == Schemata::Component::Foo::V12
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
@@ -340,9 +305,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should take a v11 message, upvert, and return a correct V12 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v11_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v11_msg)
         foo_obj.class.should == Schemata::Component::Foo::V12
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
@@ -350,9 +313,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should take a v12 message and return a correct V12 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v12_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v12_msg)
         foo_obj.class.should == Schemata::Component::Foo::V12
         foo_obj.foo1.should == "hello"
         foo_obj.foo2.should == 1
@@ -366,11 +327,9 @@ of V10, V11, and V12 hashes" do
             "foo1" => "foo"
           }
         }
-        json_msg = Yajl::Encoder.encode msg_hash
+        json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
@@ -380,11 +339,9 @@ of V10, V11, and V12 hashes" do
           "V10" => {},
           "V11" => {}
         }
-        json_msg = Yajl::Encoder.encode msg_hash
+        json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
@@ -395,19 +352,15 @@ of V10, V11, and V12 hashes" do
           "V11" => {"foo3" => 1},
           "V12" => {}
         }
-        json_msg = Yajl::Encoder.encode msg_hash
+        json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            json_msg)
+          foo_obj = Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
       it "should raise an IncompatibleVersionError on a v13 message" do
         expect {
-          foo_obj = Schemata::Component.decode(
-            Schemata::Component::Foo,
-            @v13_msg)
+          foo_obj = Schemata::Component::Foo.decode(@v13_msg)
         }.to raise_error(Schemata::IncompatibleVersionError)
       end
     end
@@ -422,9 +375,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should validate a v10 message and return a correct V13 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v10_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v10_msg)
         foo_obj.class.should == Schemata::Component::Foo::V13
         foo_obj.foo1.should == "hello"
         foo_obj.foo3.should == [1]
@@ -432,9 +383,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should validate a v11 message and return a correct V13 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v11_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v11_msg)
         foo_obj.class.should == Schemata::Component::Foo::V13
         foo_obj.foo1.should == "hello"
         foo_obj.foo3.should == [1]
@@ -442,9 +391,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should validate a v12 message and return a correct V13 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v12_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v12_msg)
         foo_obj.class.should == Schemata::Component::Foo::V13
         foo_obj.foo1.should == "hello"
         foo_obj.foo3.should == [1]
@@ -452,9 +399,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should validate a v13 message and return a correct V13 object" do
-        foo_obj =Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v13_msg)
+        foo_obj =Schemata::Component::Foo.decode(@v13_msg)
         foo_obj.class.should == Schemata::Component::Foo::V13
         foo_obj.foo1.should == "hello"
         foo_obj.foo3.should == [1]
@@ -462,9 +407,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should validate a v14 message and return a correct v13 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v14_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v14_msg)
         foo_obj.class.should == Schemata::Component::Foo::V13
         foo_obj.foo1.should == "hello"
         foo_obj.foo3.should == [1]
@@ -479,18 +422,14 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should validate a v13 message and return a correct v14 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v13_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v13_msg)
         foo_obj.class.should == Schemata::Component::Foo::V14
         foo_obj.foo1.should == "hello"
         foo_obj.foo3.should == [1]
       end
 
       it "should validate a v14 message and return a correct v14 object" do
-        foo_obj = Schemata::Component.decode(
-          Schemata::Component::Foo,
-          @v14_msg)
+        foo_obj = Schemata::Component::Foo.decode(@v14_msg)
         foo_obj.class.should == Schemata::Component::Foo::V14
         foo_obj.foo1.should == "hello"
         foo_obj.foo3.should == [1]
@@ -510,7 +449,7 @@ of V10, V11, and V12 hashes" do
 
       it "should take a v10 obj and return the correct json string" do
         v10_obj = Schemata::Component::Foo::V10.new(@v10_hash)
-        json = Schemata::Component.encode(v10_obj)
+        json = v10_obj.encode
         returned_hash = Yajl::Parser.parse json
         returned_hash.keys.should =~ ['min_version', 'V10']
 
@@ -526,7 +465,7 @@ of V10, V11, and V12 hashes" do
       it "should raise an error if the msg_obj is incomplete" do
         msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
         expect {
-          json = Schemata::Component.encode(msg_obj)
+          json = msg_obj.encode
         }.to raise_error(Schemata::EncodeError)
       end
     end
@@ -542,7 +481,7 @@ of V10, V11, and V12 hashes" do
 
       it "should take a v11 obj and return the correct json string" do
         v11_obj = Schemata::Component::Foo::V11.new @v11_hash
-        json = Schemata::Component.encode(v11_obj)
+        json = v11_obj.encode
         returned_hash = Yajl::Parser.parse json
 
         returned_hash.keys.should =~ ['min_version', 'V10', 'V11']
@@ -564,7 +503,7 @@ of V10, V11, and V12 hashes" do
       it "should raise an error if the msg_obj is incomplete" do
         msg_obj = Schemata::Component::Foo::V11.new({"foo1" => "foo"})
         expect {
-          json = Schemata::Component.encode(msg_obj)
+          json = msg_obj.encode
         }.to raise_error(Schemata::EncodeError)
       end
     end
@@ -580,7 +519,7 @@ of V10, V11, and V12 hashes" do
 
       it "should take a v12 obj and return the correct json string" do
         v12_obj = Schemata::Component::Foo::V12.new @v12_hash
-        json = Schemata::Component.encode(v12_obj)
+        json = v12_obj.encode
         returned_hash = Yajl::Parser.parse json
 
         returned_hash.keys.should =~ ['min_version', 'V10', 'V11', 'V12']
@@ -607,7 +546,7 @@ of V10, V11, and V12 hashes" do
       it "should raise an error if the msg_obj is incomplete" do
         msg_obj = Schemata::Component::Foo::V12.new({"foo1" => "foo"})
         expect {
-          json = Schemata::Component.encode(msg_obj)
+          json = msg_obj.encode
         }.to raise_error(Schemata::EncodeError)
       end
     end
@@ -623,7 +562,7 @@ of V10, V11, and V12 hashes" do
 
       it "should take a v13 obj and return the correct json string" do
         v13_obj = Schemata::Component::Foo::V13.new @v13_hash
-        json = Schemata::Component.encode(v13_obj)
+        json = v13_obj.encode
         returned_hash = Yajl::Parser.parse json
 
         returned_hash.keys.should =~ ['min_version', 'V13']
@@ -640,7 +579,7 @@ of V10, V11, and V12 hashes" do
       it "should raise an error if the msg_obj is incomplete" do
         msg_obj = Schemata::Component::Foo::V13.new({"foo1" => "foo"})
         expect {
-          json = Schemata::Component.encode(msg_obj)
+          json = msg_obj.encode
         }.to raise_error(Schemata::EncodeError)
       end
     end
@@ -654,7 +593,7 @@ of V10, V11, and V12 hashes" do
       it "should take a v14 obj and return the correct json string" do
         aux_data = { "foo4" => "foo" }
         v14_obj = Schemata::Component::Foo::V14.new(@v14_hash, aux_data)
-        json = Schemata::Component.encode(v14_obj)
+        json = v14_obj.encode
         returned_hash = Yajl::Parser.parse(json)
 
         returned_hash.keys.should =~ ['min_version', 'V13', 'V14']
@@ -674,7 +613,7 @@ of V10, V11, and V12 hashes" do
       it "should raise an error if the msg_obj is incomplete" do
         msg_obj = Schemata::Component::Foo::V14.new({"foo1" => "foo"})
         expect {
-          json = Schemata::Component.encode(msg_obj)
+          json = msg_obj.encode
         }.to raise_error(Schemata::EncodeError)
 
         msg_obj = Schemata::Component::Foo::V14.new({
@@ -683,7 +622,7 @@ of V10, V11, and V12 hashes" do
                                                     })
         expect {
           # aux data is missing, and therefore an error is expected.
-          json = Schemata::Component.encode(msg_obj)
+          json = msg_obj.encode
         }.to raise_error(Schemata::EncodeError)
       end
     end

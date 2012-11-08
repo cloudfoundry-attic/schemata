@@ -45,15 +45,13 @@ describe Schemata::CloudController do
       end
 
       it "should take a v10 msg and create a v10 obj" do
-        msg_obj = Schemata::CloudController.decode(Schemata::CloudController::Bar,
-                                             @v10_msg)
+        msg_obj = Schemata::CloudController::Bar.decode(@v10_msg)
         msg_obj.bar1.should == "first"
         msg_obj.bar2.should == "second"
       end
 
       it "should take a v11 msg and create a v10 obj" do
-        msg_obj = Schemata::CloudController.decode(Schemata::CloudController::Bar,
-                                             @v11_msg)
+        msg_obj = Schemata::CloudController::Bar.decode(@v11_msg)
         msg_obj.bar1.should == "1"
         msg_obj.bar2.should == "second"
       end
@@ -69,15 +67,13 @@ describe Schemata::CloudController do
       end
 
       it "should take a v10 msg and create a v11 obj" do
-        msg_obj = Schemata::CloudController.decode(Schemata::CloudController::Bar,
-                                             @v10_msg)
+        msg_obj = Schemata::CloudController::Bar.decode(@v10_msg)
         msg_obj.bar1.should == 5
         msg_obj.bar3.should == "third"
       end
 
       it "should take a v11 msg and create a v11 obj" do
-        msg_obj = Schemata::CloudController.decode(Schemata::CloudController::Bar,
-                                             @v11_msg)
+        msg_obj = Schemata::CloudController::Bar.decode(@v11_msg)
         msg_obj.bar1.should == 1
         msg_obj.bar3.should == "third"
       end
@@ -96,7 +92,7 @@ describe Schemata::CloudController do
 
       it "should take a v10 obj and encode a json msg" do
         v10_obj = Schemata::CloudController::Bar::V10.new(@v10_hash)
-        json_msg = Schemata::CloudController.encode(v10_obj)
+        json_msg = v10_obj.encode
         returned_hash = Yajl::Parser.parse(json_msg)
 
         returned_hash.keys.should =~ ['min_version', 'V10']
@@ -118,7 +114,7 @@ describe Schemata::CloudController do
       it "should take a v11 obj and encode a json msg" do
         aux_data = {"bar2" => "second" }
         v11_obj = Schemata::CloudController::Bar::V11.new(@v11_hash, aux_data)
-        json_msg = Schemata::CloudController.encode(v11_obj)
+        json_msg = v11_obj.encode
         returned_hash = Yajl::Parser.parse(json_msg)
 
         returned_hash.keys.should =~ ['min_version', 'V10', 'V11']
