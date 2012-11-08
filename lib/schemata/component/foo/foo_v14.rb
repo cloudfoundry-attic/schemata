@@ -33,6 +33,8 @@ module Schemata::Component::Foo
 
     def self.upvert(old_data)
       begin
+        # We don't validate the aux data because a higher versioned message
+        # does not require the aux data of its previous version.
         Schemata::Component::Foo::V13::SCHEMA.validate(old_data)
       rescue Membrane::SchemaValidationError => e
         raise Schemata::DecodeError.new(e.message)
@@ -44,13 +46,15 @@ module Schemata::Component::Foo
     end
 
     def generate_old_fields
-      unless @aux_data
+      if aux_data.empty?
         raise Schemata::DecodeError.new("Necessary aux_data missing")
       end
+
       msg_contents = contents
-      msg_contents.update(@aux_data)
-      return Schemata::Component::Foo::V13.new(msg_contents), 
-        Schemata::HashCopyHelpers.deep_copy(@aux_data)
+      aux_contents = aux_data.contents
+      msg_contents.update(aux_contents)
+
+      return Schemata::Component::Foo::V13.new(msg_contents), aux_contents
     end
 
     #################################################

@@ -56,7 +56,7 @@ module Schemata::Component::Foo
       SCHEMA
     end
 
-    def aux_data
+    def aux_schema
       nil
     end
 

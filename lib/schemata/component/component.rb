@@ -34,7 +34,8 @@ module Schemata
 
       begin
         msg_obj = curr_class.new(msg_contents)
-        msg_obj.validate
+        msg_obj.validate_contents
+        # We don't validate aux data in decode.
         return msg_obj
       rescue Schemata::UpdateAttributeError => e
         raise Schemata::DecodeError.new(e.message)
@@ -45,7 +46,8 @@ module Schemata
 
     def self.encode(msg_obj)
       begin
-        msg_obj.validate
+        msg_obj.validate_contents
+        msg_obj.validate_aux_data
       rescue Membrane::SchemaValidationError => e
         raise Schemata::EncodeError.new(e.message)
       end

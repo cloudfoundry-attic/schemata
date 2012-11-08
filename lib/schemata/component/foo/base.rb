@@ -8,58 +8,91 @@ end
 module Schemata::Component::Foo
   module Base
 
-    def initialize(msg_data, aux_data=nil)
-      schema.schemas.each do |k, inner_schema|
-        self.class.send(:define_method, "#{k}".to_sym) do
-          Schemata::HashCopyHelpers.deep_copy(@contents[k])
+    class ValidatingContainer
+      def initialize(schema, data = {})
+        data ||= {}
+        @schema = schema
+        @contents = {}
+
+        @schema.schemas.each do |key, field_schema|
+          self.class.send(:define_method, "#{key}".to_sym) do
+            if @contents[key]
+              return Schemata::HashCopyHelpers.deep_copy(@contents[key])
+            end
+
+            nil
+          end
+
+          self.class.send(:define_method, "#{key}=".to_sym) do |field_value|
+            begin
+              field_schema.validate(field_value)
+            rescue Membrane::SchemaValidationError => e
+              raise Schemata::UpdateAttributeError.new(e.message)
+            end
+
+            @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
+            field_value
+          end
         end
 
-        self.class.send(:define_method, "#{k}=".to_sym) do |v|
+        data.each do |key, field_value|
+          field_schema = @schema.schemas[key]
+          next unless field_schema
+
           begin
-            inner_schema.validate(v)
+            field_schema.validate(field_value)
           rescue Membrane::SchemaValidationError => e
             raise Schemata::UpdateAttributeError.new(e.message)
           end
 
-          @contents[k] = Schemata::HashCopyHelpers.deep_copy(v)
-          v
+          @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
         end
       end
 
-      if aux_data
-        begin
-          aux_schema.validate(aux_data)
-        rescue Membrane::SchemaValidationError => e
-          raise Schemata::EncodeError.new(e.message)
-        end
-
-        @aux_data = Schemata::HashCopyHelpers.deep_copy(aux_data)
+      def contents
+        Schemata::HashCopyHelpers.deep_copy(@contents)
       end
 
-      @contents = {}
-      msg_data.each do |k, v|
-        next unless schema.schemas[k]
+      def empty?
+        @contents.empty?
+      end
 
-        begin
-          schema.schemas[k].validate(v)
-        rescue Membrane::SchemaValidationError => e
-          raise Schemata::UpdateAttributeError.new(e.message)
-        end
-
-        @contents[k] = Schemata::HashCopyHelpers.deep_copy(v)
+      def validate
+        @schema.validate(@contents)
       end
     end
 
-    def validate
-      schema.validate(@contents)
+    def initialize(msg_data_hash, aux_data_hash = nil)
+      @contents = ValidatingContainer.new(schema, msg_data_hash)
+      if aux_schema
+        @aux_contents = ValidatingContainer.new(aux_schema, aux_data_hash)
+      end
+
+      schema.schemas.each do |key, field_schema|
+        self.class.send(:define_method, "#{key}".to_sym) do
+          @contents.send("#{key}".to_sym)
+        end
+
+        self.class.send(:define_method, "#{key}=".to_sym) do |field_value|
+          @contents.send("#{key}=".to_sym, field_value)
+        end
+      end
+    end
+
+    def validate_contents
+      @contents.validate
+    end
+
+    def validate_aux_data
+      @aux_contents.validate if aux_schema
     end
 
     def contents
-      Schemata::HashCopyHelpers.deep_copy(@contents)
+      @contents.contents
     end
 
     def aux_data
-      Schemata::HashCopyHelpers.deep_copy(@aux_data) if @aux_data
+      @aux_contents
     end
 
     def message_type

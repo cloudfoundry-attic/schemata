@@ -562,7 +562,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should raise an error if the msg_obj is incomplete" do
-        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        msg_obj = Schemata::Component::Foo::V11.new({"foo1" => "foo"})
         expect {
           json = Schemata::Component.encode(msg_obj)
         }.to raise_error(Schemata::EncodeError)
@@ -605,7 +605,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should raise an error if the msg_obj is incomplete" do
-        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        msg_obj = Schemata::Component::Foo::V12.new({"foo1" => "foo"})
         expect {
           json = Schemata::Component.encode(msg_obj)
         }.to raise_error(Schemata::EncodeError)
@@ -638,7 +638,7 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should raise an error if the msg_obj is incomplete" do
-        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        msg_obj = Schemata::Component::Foo::V13.new({"foo1" => "foo"})
         expect {
           json = Schemata::Component.encode(msg_obj)
         }.to raise_error(Schemata::EncodeError)
@@ -672,8 +672,17 @@ of V10, V11, and V12 hashes" do
       end
 
       it "should raise an error if the msg_obj is incomplete" do
-        msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
+        msg_obj = Schemata::Component::Foo::V14.new({"foo1" => "foo"})
         expect {
+          json = Schemata::Component.encode(msg_obj)
+        }.to raise_error(Schemata::EncodeError)
+
+        msg_obj = Schemata::Component::Foo::V14.new({
+                                                      "foo1" => "foo",
+                                                      "foo3" => [1],
+                                                    })
+        expect {
+          # aux data is missing, and therefore an error is expected.
           json = Schemata::Component.encode(msg_obj)
         }.to raise_error(Schemata::EncodeError)
       end
