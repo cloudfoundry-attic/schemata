@@ -4,31 +4,10 @@ module Schemata
   module MessageBase
 
     class ValidatingContainer
-      def initialize(schema, data = {})
+      def initialize(data = {})
         data ||= {}
-        @schema = schema
+        @schema = self.class.const_get(:SCHEMA)
         @contents = {}
-
-        @schema.schemas.each do |key, field_schema|
-          self.class.send(:define_method, "#{key}".to_sym) do
-            if @contents[key]
-              return Schemata::HashCopyHelpers.deep_copy(@contents[key])
-            end
-
-            nil
-          end
-
-          self.class.send(:define_method, "#{key}=".to_sym) do |field_value|
-            begin
-              field_schema.validate(field_value)
-            rescue Membrane::SchemaValidationError => e
-              raise Schemata::UpdateAttributeError.new(e.message)
-            end
-
-            @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
-            field_value
-          end
-        end
 
         data.each do |key, field_value|
           field_schema = @schema.schemas[key]
@@ -44,6 +23,30 @@ module Schemata
         end
       end
 
+      def self.define(schema)
+        vc_klass = Class.new(self)
+        vc_klass.const_set(:SCHEMA, schema)
+        schema.schemas.each do |key, field_schema|
+          vc_klass.send(:define_method, key) do
+            if @contents[key]
+              return Schemata::HashCopyHelpers.deep_copy(@contents[key])
+            end
+            nil
+          end
+
+          vc_klass.send(:define_method, "#{key}=") do |field_value|
+            begin
+              field_schema.validate(field_value)
+            rescue Membrane::SchemaValidationError => e
+              raise Schemata::UpdateAttributeError.new(e.message)
+            end
+            @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
+            field_value
+          end
+        end
+        vc_klass
+      end
+
       def contents
         Schemata::HashCopyHelpers.deep_copy(@contents)
       end
@@ -57,21 +60,19 @@ module Schemata
       end
     end
 
+
+    def vc_klass
+      self.class.const_get(:VC_KLASS)
+    end
+
+    def aux_vc_klass
+      return self.class.const_get(:AUX_VC_KLASS) if self.class.aux_schema
+    end
+
     def initialize(msg_data_hash, aux_data_hash = nil)
-      @contents = ValidatingContainer.new(self.class.schema, msg_data_hash)
+      @contents = vc_klass.new(msg_data_hash)
       if self.class.aux_schema
-        @aux_contents = ValidatingContainer.new(self.class.aux_schema,
-                                                aux_data_hash)
-      end
-
-      self.class.schema.schemas.each do |key, field_schema|
-        self.class.send(:define_method, "#{key}".to_sym) do
-          @contents.send("#{key}".to_sym)
-        end
-
-        self.class.send(:define_method, "#{key}=".to_sym) do |field_value|
-          @contents.send("#{key}=".to_sym, field_value)
-        end
+        @aux_contents = aux_vc_klass.new(aux_data_hash)
       end
     end
 
@@ -121,7 +122,7 @@ module Schemata
 
     def self.included(klass)
       klass.extend(Schemata::ClassMethods)
-      klass.extend Dsl
+      klass.extend(Dsl)
     end
   end
 

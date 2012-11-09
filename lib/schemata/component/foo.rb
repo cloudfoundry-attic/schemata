@@ -1,6 +1,3 @@
-Dir[File.dirname(__FILE__) + '/foo/*.rb'].each do |file|
-  require file
-end
 require 'schemata/common/msgtypebase'
 
 module Schemata
@@ -10,3 +7,8 @@ module Schemata
     end
   end
 end
+
+Dir[File.dirname(__FILE__) + '/foo/*.rb'].each do |file|
+  require file
+end
+

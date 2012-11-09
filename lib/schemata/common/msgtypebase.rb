@@ -66,6 +66,27 @@ module Schemata
         end
         klass.send(:include, Schemata::MessageBase)
         klass.instance_eval(&blk)
+
+        # Create the necessary ValidatingContainer subclasses (one for schema
+        # and, optionally, one for aux_schema
+        klass.instance_eval do
+          vc_klass = self::ValidatingContainer.define(self.schema)
+          self.const_set(:VC_KLASS, vc_klass)
+          if self.aux_schema
+            aux_vc_klass = self::ValidatingContainer.define(self.aux_schema)
+            self.const_set(:AUX_VC_KLASS, aux_vc_klass)
+          end
+        end
+
+        # Define attribute accessors for the message class
+        klass.schema.schemas.each do |key, field_schema|
+          klass.send(:define_method, key) do
+            @contents.send(key)
+          end
+          klass.send(:define_method, "#{key}=") do |field_value|
+            @contents.send("#{key}=", field_value)
+          end
+        end
         self::const_set("V#{v}", klass)
       end
     end

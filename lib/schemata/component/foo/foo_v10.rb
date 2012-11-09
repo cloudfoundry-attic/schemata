@@ -5,7 +5,6 @@ require 'schemata/common/msgtypebase'
 module Schemata
   module Component
     module Foo
-      extend Schemata::MessageTypeBase
 
       version 10 do
         define_schema do

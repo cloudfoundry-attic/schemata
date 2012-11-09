@@ -5,7 +5,6 @@ require 'schemata/helpers/hash_copy'
 module Schemata
   module Component
     module Foo
-      extend Schemata::MessageTypeBase
 
       version 13 do
         define_schema do

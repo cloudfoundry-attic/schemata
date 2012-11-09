@@ -5,7 +5,6 @@ require 'schemata/helpers/hash_copy'
 module Schemata
   module CloudController
     module Bar
-      extend Schemata::MessageTypeBase
 
       version 10 do
         define_schema do
