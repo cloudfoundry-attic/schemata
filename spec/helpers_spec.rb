@@ -17,8 +17,8 @@ describe Schemata::HashCopyHelpers do
       copy.should be_instance_of Hash
       copy.should == original
 
-      copy["hello"] = "goodbye"
-      copy.keys.should_not =~ original.keys
+      copy.object_id.should_not == original.object_id
+      copy["foo"].object_id.should_not == original["foo"].object_id
     end
 
     it "should return a new array when given an array" do
@@ -27,25 +27,27 @@ describe Schemata::HashCopyHelpers do
       copy.should be_instance_of Array
       copy.should == original
 
-      original[0] = 0
-      copy.should_not == original
+      copy.object_id.should_not == original.object_id
+      # only check object_id of String object
+      copy[2].object_id.should_not == original[2].object_id
     end
 
     it "should deep copy nested types" do
       original = {
         "foo" => "bar",
         "inner" => {
-          "hello" => "goodbye"
-        }
+          "hello" => "goodbye",
+        },
       }
       copy = Schemata::HashCopyHelpers.deep_copy(original)
       copy.should be_instance_of Hash
       copy.should == original
 
-      original["inner"]["hello"] = "world"
-      copy.keys.should =~ original.keys
-      copy["inner"].keys.should =~ original["inner"].keys
-      copy["inner"].values.should_not =~ original["inner"].values
+      copy.object_id.should_not == original.object_id
+      copy["foo"].object_id.should_not == original["foo"].object_id
+      copy["inner"].object_id.should_not == original["inner"].object_id
+      copy["inner"]["hello"].object_id.
+        should_not == original["inner"]["hello"].object_id
     end
   end
 end
