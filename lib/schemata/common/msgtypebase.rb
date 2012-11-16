@@ -4,9 +4,12 @@ module Schemata
   module MessageTypeBase
     def current_version
       return @current_version if @current_version
-      klasses = self.constants.self { |x| x =~ /^V[0-9]+$/ }
-      version = klasses.map { |x| x[1..-1].to_i }
       @current_version = versions.max
+    end
+
+    def versions
+      str_versions = self.constants.select { |x| x =~ /^V[0-9]+$/ }
+      str_versions.map { |x| x[1..-1].to_i}
     end
 
     def current_class
@@ -14,7 +17,12 @@ module Schemata
     end
 
     def decode(json_msg)
-      parsed = Schemata::ParsedMessage.new(json_msg)
+      begin
+        parsed = Schemata::ParsedMessage.new(json_msg)
+      rescue Schemata::DecodeError => e
+        raise e unless versions.size == 1
+        return decode_raw_payload(json_msg)
+      end
       message_version = parsed.version
 
       curr_version = current_version
@@ -88,6 +96,20 @@ module Schemata
           end
         end
         self::const_set("V#{v}", klass)
+      end
+    end
+
+    private
+
+    def decode_raw_payload(json)
+      begin
+        msg_contents = Yajl::Parser.parse(json)
+        msg_obj = current_class.new(msg_contents)
+        msg_obj.validate_contents
+        return msg_obj
+      rescue Schemata::UpdateAttributeError,
+        Membrane::SchemaValidationError => e
+        raise Schemata::DecodeError.new(e.message)
       end
     end
 

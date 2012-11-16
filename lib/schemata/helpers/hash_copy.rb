@@ -14,6 +14,8 @@ module Schemata
         return copy
       when Array
         return node.map { |v| deep_copy(v) }
+      when NilClass
+        return nil
       else
         raise CopyError.new("Unexpected class: #{node.class}")
       end

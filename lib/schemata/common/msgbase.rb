@@ -163,26 +163,12 @@ module Schemata
 
   module Dsl
     def define_schema(&blk)
-      res = blk.call
-      unless res.instance_of? Hash
-        raise Schemata::SchemaDefinitionError.new("Schema must be a hash")
-      end
-
-      schema = Membrane::SchemaParser.parse do
-        res
-      end
+      schema = Membrane::SchemaParser.parse(&blk)
       self::const_set(:SCHEMA, schema)
     end
 
     def define_aux_schema(&blk)
-      res = blk.call
-      unless res.instance_of? Hash
-        raise Schemata::SchemaDefinitionError.new("Schema must be a hash")
-      end
-
-      aux_schema = Membrane::SchemaParser.parse do
-        res
-      end
+      aux_schema = Membrane::SchemaParser.parse(&blk)
       self::const_set(:AUX_SCHEMA, aux_schema)
     end
 
