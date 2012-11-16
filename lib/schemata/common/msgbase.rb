@@ -84,7 +84,7 @@ module Schemata
       end
 
       msg_type = message_type
-      curr_version = msg_type.current_version
+      curr_version = self.class.version
       min_version = self.class::MIN_VERSION_ALLOWED
 
       msg = { "V#{curr_version}" => contents }
