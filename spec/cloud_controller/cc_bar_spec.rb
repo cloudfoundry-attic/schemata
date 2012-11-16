@@ -1,5 +1,5 @@
 require 'schemata/cloud_controller/cloud_controller'
-require File.expand_path('../support/helpers', __FILE__)
+require 'support/helpers'
 
 describe Schemata::CloudController do
   before :each do

@@ -1,5 +1,5 @@
 require 'schemata/component/component'
-require File.expand_path('../support/helpers', __FILE__)
+require 'support/helpers'
 
 describe Schemata::Component do
   before :each do
