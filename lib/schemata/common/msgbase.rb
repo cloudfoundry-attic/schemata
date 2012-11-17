@@ -96,7 +96,17 @@ module Schemata
          msg["V#{v}"] = old_fields
       end
       msg["min_version"] = min_version
+
+      if include_preschemata?
+        msg["V#{curr_version}"].each do |k, v|
+          msg[k] = v
+        end
+      end
       Yajl::Encoder.encode(msg)
+    end
+
+    def include_preschemata?
+      self.class.const_get(:INCLUDE_PRESCHEMATA)
     end
 
     def validate_contents
@@ -209,8 +219,29 @@ module Schemata
       end
     end
 
+    def define_mock_values(hash=nil, &blk)
+      if (hash && blk) ||  (!hash && !blk)
+        # value defined twice or not at all
+        raise SchemaDefinitionError.new("Mock values incorrectly defined")
+      end
+
+      hash = blk.call if blk
+
+      begin
+        self.schema.validate(hash)
+        define_constant(:MOCK_VALUES, hash)
+      rescue Membrane::SchemaValidationError => e
+        raise SchemaDefinitionError.new("Mock values do not match schema: #{e}")
+      end
+    end
+
     def define_constant(constant_name, constant_value)
       self.const_set(constant_name, constant_value)
     end
+
+    def include_preschemata
+      define_constant(:INCLUDE_PRESCHEMATA, true)
+    end
+
   end
 end

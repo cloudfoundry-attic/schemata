@@ -75,6 +75,10 @@ module Schemata
         klass.send(:include, Schemata::MessageBase)
         klass.instance_eval(&blk)
 
+        if !defined? klass::INCLUDE_PRESCHEMATA
+          klass.const_set(:INCLUDE_PRESCHEMATA, false)
+        end
+
         # Create the necessary ValidatingContainer subclasses (one for schema
         # and, optionally, one for aux_schema
         klass.instance_eval do

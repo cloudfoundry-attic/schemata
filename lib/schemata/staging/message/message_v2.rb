@@ -66,7 +66,8 @@ module Schemata
           {}
         end
 
-        define_constant :MOCK_VALUES, {
+        define_mock_values do
+          {
           "app_id"                => 1,
           "download_uri"          => "http://foobar@172.0.0.0:100/download",
           "upload_uri"            => "http://foobar@172.0.0.0:100/upload",
@@ -140,6 +141,7 @@ module Schemata
             }
           }
         }
+        end
       end
     end
   end

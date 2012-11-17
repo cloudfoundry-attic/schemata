@@ -7,6 +7,8 @@ module Schemata
     module Message
 
       version 1 do
+        include_preschemata
+
         define_schema do
           {
             "app_id"                    => Integer,
@@ -56,35 +58,6 @@ module Schemata
           }
         end
 
-        self.send(:define_method, :encode) do
-          begin
-            validate_contents
-            validate_aux_data
-          rescue Membrane::SchemaValidationError => e
-            raise Schemata::EncodeError.new(e.message)
-          end
-
-          msg_type = message_type
-          curr_version = msg_type.current_version
-          min_version = self.class::MIN_VERSION_ALLOWED
-
-          msg = { "V#{curr_version}" => contents }
-          curr_msg_obj = self
-          (min_version...curr_version).reverse_each do |v|
-            curr_msg_obj, old_fields =
-              curr_msg_obj.generate_old_fields
-            msg["V#{v}"] = old_fields
-          end
-          msg["min_version"] = min_version
-
-          # The new functionality: include all the V1 in the tope level
-          msg["V1"].each do |k, v|
-            msg[k] = v
-          end
-
-          Yajl::Encoder.encode(msg)
-        end
-
         define_min_version 1
 
         define_upvert do |old_data|
@@ -95,7 +68,7 @@ module Schemata
           raise NotImplementedError.new
         end
 
-        define_constant :MOCK_VALUES, {
+        define_mock_values({
           "app_id"                => 1,
           "download_uri"          => "http://foobar@172.0.0.0:100/download",
           "upload_uri"            => "http://foobar@172.0.0.0:100/upload",
@@ -168,7 +141,7 @@ module Schemata
               "name"              => "ruby19",
             }
           }
-        }
+        })
       end
     end
   end
