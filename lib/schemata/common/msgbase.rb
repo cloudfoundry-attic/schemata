@@ -69,7 +69,7 @@ module Schemata
       return self.class.const_get(:AUX_VC_KLASS) if self.class.aux_schema
     end
 
-    def initialize(msg_data_hash, aux_data_hash = nil)
+    def initialize(msg_data_hash = nil, aux_data_hash = nil)
       @contents = vc_klass.new(msg_data_hash)
       if self.class.aux_schema
         @aux_contents = aux_vc_klass.new(aux_data_hash)
