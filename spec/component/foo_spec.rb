@@ -4,6 +4,14 @@ require 'support/helpers'
 
 describe Schemata::Component::Foo do
   describe "V10" do
+    it "should define accessors for the schema" do
+      v10_obj = Schemata::Component::Foo::V10.new
+      v10_obj.respond_to?(:foo1).should be_true
+      v10_obj.respond_to?(:foo1=).should be_true
+      v10_obj.respond_to?(:foo2).should be_true
+      v10_obj.respond_to?(:foo2=).should be_true
+    end
+
     it "should not raise an error if an incomplete but valid hash is given" do
       v10_hash = {"foo1" => "foo"}
       expect { Schemata::Component::Foo::V10.new(v10_hash) }.to_not raise_error
@@ -42,6 +50,16 @@ incorrectly" do
   end
 
   describe "V11" do
+    it "should define accessors for the schema" do
+      v11_obj = Schemata::Component::Foo::V11.new
+      v11_obj.respond_to?(:foo1).should be_true
+      v11_obj.respond_to?(:foo1=).should be_true
+      v11_obj.respond_to?(:foo2).should be_true
+      v11_obj.respond_to?(:foo2=).should be_true
+      v11_obj.respond_to?(:foo3).should be_true
+      v11_obj.respond_to?(:foo3=).should be_true
+    end
+
     it "should not raise an error if an incomplete but valid hash is given" do
       v11_hash = {"foo1" => "foo"}
       expect { Schemata::Component::Foo::V11.new(v11_hash) }.to_not raise_error
@@ -84,6 +102,16 @@ incorrectly" do
   end
 
   describe "V12" do
+    it "should define accessors for the schema" do
+      v12_obj = Schemata::Component::Foo::V12.new
+      v12_obj.respond_to?(:foo1).should be_true
+      v12_obj.respond_to?(:foo1=).should be_true
+      v12_obj.respond_to?(:foo2).should be_true
+      v12_obj.respond_to?(:foo2=).should be_true
+      v12_obj.respond_to?(:foo3).should be_true
+      v12_obj.respond_to?(:foo3=).should be_true
+    end
+
     it "should not raise an error if an incomplete but valid hash is given" do
       v12_hash = {"foo1" => "foo"}
       expect { Schemata::Component::Foo::V12.new(v12_hash) }.to_not raise_error
@@ -126,6 +154,16 @@ incorrectly" do
   end
 
   describe "V13" do
+    it "should define accessors for the schema" do
+      v13_obj = Schemata::Component::Foo::V13.new
+      v13_obj.respond_to?(:foo1).should be_true
+      v13_obj.respond_to?(:foo1=).should be_true
+      v13_obj.respond_to?(:foo3).should be_true
+      v13_obj.respond_to?(:foo3=).should be_true
+      v13_obj.respond_to?(:foo4).should be_true
+      v13_obj.respond_to?(:foo4=).should be_true
+    end
+
     it "should not raise an error if an incomplete but valid hash is given" do
       v13_hash = {"foo1" => "foo"}
       expect { Schemata::Component::Foo::V13.new(v13_hash) }.to_not raise_error
