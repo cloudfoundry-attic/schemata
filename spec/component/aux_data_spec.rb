@@ -1,6 +1,14 @@
 require 'schemata/component/foo'
 
 describe Schemata::Component::Foo::V14 do
+  describe "#new" do
+    it "should define accessors for aux schema fields" do
+      v14_obj = Schemata::Component::Foo::V14.new
+      v14_obj.aux_data.respond_to?(:foo4).should be_true
+      v14_obj.aux_data.respond_to?(:foo4=).should be_true
+    end
+  end
+
   describe "#generate_old_fields" do
     it "should emit correct fields if the object was constructed with aux_data" do
       v14_hash = {
