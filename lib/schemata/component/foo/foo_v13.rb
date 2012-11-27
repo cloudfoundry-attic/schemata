@@ -28,14 +28,14 @@ module Schemata
           {}
         end
 
-        define_constant :MOCK_VALUES, {
+        define_mock_values({
           "foo1" => "foo",
           "foo3" => lambda { [Random.rand(11)] },
           "foo4" => Proc.new do
             time = Time.now
             time.to_s
           end
-        }
+        })
       end
 
     end

@@ -60,7 +60,6 @@ module Schemata
       end
     end
 
-
     def vc_klass
       self.class.const_get(:VC_KLASS)
     end
@@ -227,11 +226,17 @@ module Schemata
 
       hash = blk.call if blk
 
+      # Validate a sample of the mock values.
+      mock = {}
+      hash.each do |key, value|
+        mock[key] = value.respond_to?("call") ? value.call : value
+      end
+
       begin
-        self.schema.validate(hash)
+        self.schema.validate(mock)
         define_constant(:MOCK_VALUES, hash)
       rescue Membrane::SchemaValidationError => e
-        raise SchemaDefinitionError.new("Mock values do not match schema: #{e}")
+        raise SchemaDefinitionError.new("Sample mock values do not match schema: #{e}")
       end
     end
 

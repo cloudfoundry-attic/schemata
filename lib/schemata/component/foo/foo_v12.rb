@@ -28,11 +28,11 @@ module Schemata
           old_fields = {"foo3" => first}
         end
 
-        define_constant :MOCK_VALUES, {
+        define_mock_values({
           "foo1" => "foo",
           "foo2" => 2,
           "foo3" => lambda { [Random.rand(11)] },
-        }
+        })
       end
     end
   end

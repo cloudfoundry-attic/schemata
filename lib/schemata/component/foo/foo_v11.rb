@@ -29,11 +29,11 @@ module Schemata
           {}
         end
 
-        define_constant :MOCK_VALUES, {
+        define_mock_values({
           "foo1" => "foo",
           "foo2" => 2,
           "foo3" => 3
-        }
+        })
       end
     end
   end

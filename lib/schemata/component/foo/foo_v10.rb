@@ -24,10 +24,10 @@ module Schemata
           raise NotImplementedError.new
         end
 
-        define_constant :MOCK_VALUES, {
+        define_mock_values({
           "foo1" => "foo",
           "foo2" => 2
-        }
+        })
       end
     end
   end
