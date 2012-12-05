@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    schemata-component (0.0.1)
+    schemata-staging (0.0.1)
       membrane
       yajl-ruby
 
@@ -31,4 +31,4 @@ DEPENDENCIES
   ci_reporter
   rake
   rspec
-  schemata-component!
+  schemata-staging!

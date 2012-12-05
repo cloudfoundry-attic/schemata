@@ -1,4 +1,5 @@
 require 'schemata/common/msgbase'
+require 'schemata/common/parsed_msg'
 
 module Schemata
   module MessageTypeBase

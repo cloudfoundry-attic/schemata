@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gemspec :name => 'schemata-component'
+gemspec :name => 'schemata-staging'
 
 group :test do
   gem 'rspec'

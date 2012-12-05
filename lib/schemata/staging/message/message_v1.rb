@@ -30,7 +30,7 @@ module Schemata
                 },
                 "options"               => any,
                 "plan"                  => String,
-                "plan_options"          => any,
+                "plan_option"          => any,
                 "type"                  => String,
                 "version"               => String,
                 "vendor"                => String,
@@ -43,8 +43,8 @@ module Schemata
                 optional("runtimes")    => [Hash],
               },
               "meta" => {
-                "debug"                 => any,
-                "console"               => any,
+                optional("debug")       => any,
+                optional("console")     => any,
                 optional("command")     => String,
               },
               "resources" => {
@@ -89,7 +89,7 @@ module Schemata
               },
               "options"           => {},
               "plan"              => "free",
-              "plan_options"      => nil,
+              "plan_option"      => nil,
               "type"              => "document",
               "version"           => "1.8",
               "vendor"            => "mongodb",

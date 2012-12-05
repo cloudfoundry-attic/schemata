@@ -1,3 +1,4 @@
+require 'yajl'
 require 'schemata/common/error'
 
 module Schemata

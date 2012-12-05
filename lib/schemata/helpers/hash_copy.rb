@@ -10,7 +10,11 @@ module Schemata
         return node
       when Hash
         copy = {}
-        node.each { |k, v| copy[k] = deep_copy(v) }
+        # XXX NB: The 'to_s' below was included because some components use
+        # symbols as keys instead of strings. This fix is temporary; in the
+        # long term, we should change all components to use the same type for
+        # their keys
+        node.each { |k, v| copy[k.to_s] = deep_copy(v) }
         return copy
       when Array
         return node.map { |v| deep_copy(v) }
