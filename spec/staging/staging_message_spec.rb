@@ -4,9 +4,55 @@ require 'schemata/staging'
 
 describe Schemata::Staging do
   describe ".mock_message" do
-    it "should return a V1 object" do
-      msg_obj = Schemata::Staging.mock_message(1)
-      msg_obj.class.should == Schemata::Staging::Message::V1
+    context "when current version is 1" do
+      before :each do
+        set_current_version(Schemata::Staging::Message, 1)
+      end
+
+      after :each do
+        reset_version(Schemata::Staging::Message)
+      end
+
+      it "should return a V1 object if called with an argument" do
+        msg_obj = Schemata::Staging.mock_message(1)
+        msg_obj.class.should == Schemata::Staging::Message::V1
+      end
+
+      it "should return a V1 object if called with input 1" do
+        msg_obj = Schemata::Staging.mock_message
+        msg_obj.class.should == Schemata::Staging::Message::V1
+      end
+
+      it "should raise an error if called with input > 1" do
+        expect {
+          msg_obj = Schemata::Staging.mock_message(2)
+        }.to raise_error(NameError)
+      end
+    end
+
+    context "when current version is 2" do
+      before :each do
+        set_current_version(Schemata::Staging::Message, 2)
+      end
+
+      after :each do
+        reset_version(Schemata::Staging::Message)
+      end
+
+      it "should return a V2 object if called without an argument" do
+        msg_obj = Schemata::Staging.mock_message
+        msg_obj.class.should == Schemata::Staging::Message::V2
+      end
+
+      it "should return a V1 object if called with input 1" do
+        msg_obj = Schemata::Staging.mock_message(1)
+        msg_obj.class.should == Schemata::Staging::Message::V1
+      end
+
+      it "should return a V2 object if called with input 2" do
+        msg_obj = Schemata::Staging.mock_message(2)
+        msg_obj.class.should == Schemata::Staging::Message::V2
+      end
     end
   end
 end
@@ -101,6 +147,82 @@ describe Schemata::Staging::Message do
         }.to raise_error(Schemata::DecodeError)
       end
     end
+
+    context "current version is 2" do
+      before :each do
+        set_current_version(Schemata::Staging::Message, 2)
+      end
+
+      after :each do
+        reset_version(Schemata::Staging::Message)
+      end
+
+      it "should raise an error given a flat hash" do
+        json = Yajl::Encoder.encode(
+          Schemata::Staging::Message::V2::MOCK_VALUES)
+        expect {
+          msg_obj = Schemata::Staging::Message.decode(json)
+        }.to raise_error(Schemata::DecodeError)
+      end
+
+      it "should return V2 object a given a mixed (flat_hash + V1-encoded) json" do
+        msg_hash = Schemata::HashCopyHelpers.deep_copy(
+          Schemata::Staging::Message::V2::MOCK_VALUES)
+
+        v2_hash = Schemata::HashCopyHelpers.deep_copy(msg_hash)
+        v1_hash = {}
+
+        msg_hash['V2'] = v2_hash
+        msg_hash['V1'] = v1_hash
+        msg_hash['min_version'] = 1
+
+        json = Yajl::Encoder.encode(msg_hash)
+
+        msg_obj = Schemata::Staging::Message.decode(json)
+        msg_obj.class.should == Schemata::Staging::Message::V2
+
+        msg_obj.app_id.should == 1
+        msg_obj.download_uri.should == "http://foobar@172.0.0.0:100/download"
+        msg_obj.upload_uri.should == "http://foobar@172.0.0.0:100/upload"
+        msg_obj.properties.should ==
+          Schemata::Staging::Message::V2::MOCK_VALUES['properties']
+      end
+
+      it "should return a V2 object given a V1-encoded json" do
+        v1_hash = Schemata::HashCopyHelpers.deep_copy(
+          Schemata::Staging::Message::V1::MOCK_VALUES)
+        msg_hash = {"V1" => v1_hash, "min_version" => 1}
+
+        json = Yajl::Encoder.encode(msg_hash)
+
+        msg_obj = Schemata::Staging::Message.decode(json)
+        msg_obj.class.should == Schemata::Staging::Message::V2
+
+        msg_obj.app_id.should == 1
+        msg_obj.download_uri.should == "http://foobar@172.0.0.0:100/download"
+        msg_obj.upload_uri.should == "http://foobar@172.0.0.0:100/upload"
+        msg_obj.properties.should ==
+          Schemata::Staging::Message::V1::MOCK_VALUES["properties"]
+      end
+
+      it "should return a V2 object given a V2-encoded json" do
+        v2_hash = Schemata::HashCopyHelpers.deep_copy(
+          Schemata::Staging::Message::V2::MOCK_VALUES)
+        msg_hash = {"V2" => v2_hash, "V1" => {}, "min_version" => 1 }
+
+        json = Yajl::Encoder.encode(msg_hash)
+
+        msg_obj = Schemata::Staging::Message.decode(json)
+        msg_obj.class.should == Schemata::Staging::Message::V2
+
+        msg_obj.app_id.should == 1
+        msg_obj.download_uri.should == "http://foobar@172.0.0.0:100/download"
+        msg_obj.upload_uri.should == "http://foobar@172.0.0.0:100/upload"
+        msg_obj.properties.should ==
+          Schemata::Staging::Message::V2::MOCK_VALUES["properties"]
+      end
+
+   end
   end
 end
 
@@ -178,6 +300,86 @@ describe Schemata::Staging::Message::V1 do
 
     it "should raise an error if the wrong type is written" do
       msg_obj = Schemata::Staging::Message::V1.new({})
+      expect {
+        msg_obj.app_id = "foo"
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+  end
+end
+
+describe Schemata::Staging::Message::V2 do
+  before :each do
+    set_current_version(Schemata::Staging::Message, 2)
+  end
+
+  after :each do
+    reset_version(Schemata::Staging::Message)
+  end
+
+  describe "#new" do
+    it "should create a V2 object with an incomplete hash" do
+      msg_obj = Schemata::Staging::Message::V2.new({"app_id" => 1})
+    end
+
+    it "should raise an error if the hash contains incorrect types" do
+      expect {
+        msg_obj = Schemata::Staging::Message::V2.new({"app_id" => "foo"})
+      }.to raise_error(Schemata::UpdateAttributeError)
+    end
+  end
+
+  describe "#encode" do
+    it "should return a Schemata-encoded json string, with no raw payload" do
+      msg_obj = Schemata::Staging.mock_message(2)
+      json = msg_obj.encode
+      json_hash = Yajl::Parser.parse(json)
+
+      json_hash.should have_key "V2"
+      json_hash.should have_key "V1"
+      json_hash.should have_key "min_version"
+
+      json_hash.delete("V2")
+      json_hash.delete("V1")
+      json_hash.delete("min_version")
+      json_hash.should be_empty
+    end
+
+    it "should raise an error if the object is not complete" do
+      msg_obj = Schemata::Staging::Message::V2.new({"app_id" => 1})
+      expect {
+        json = msg_obj.encode
+      }.to raise_error(Schemata::EncodeError)
+    end
+  end
+
+  describe "#app_id" do
+    it "should return the app_id if it was specifed at instantiation" do
+      msg_obj = Schemata::Staging::Message::V2.new({"app_id" => 1})
+      msg_obj.app_id.should == 1
+    end
+
+    it "should return the app_id if it was set with an attr writer" do
+      msg_obj = Schemata::Staging::Message::V2.new
+      msg_obj.app_id = 1
+      msg_obj.app_id.should == 1
+    end
+
+    it "should return nil if the app_id was never set" do
+      msg_obj = Schemata::Staging::Message::V2.new
+      msg_obj.app_id.should be_nil
+    end
+  end
+
+  describe "#app_id=" do
+    it "should change the app_id and return the new value" do
+      msg_obj = Schemata::Staging::Message::V2.new({"app_id" => 1})
+      ret = (msg_obj.app_id = 2)
+      msg_obj.app_id.should == 2
+      ret.should == 2
+    end
+
+    it "should raise an error if the wrong type is written" do
+      msg_obj = Schemata::Staging::Message::V2.new
       expect {
         msg_obj.app_id = "foo"
       }.to raise_error(Schemata::UpdateAttributeError)

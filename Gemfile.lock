@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    schemata-staging (0.0.1)
+    schemata-staging (0.0.2)
       membrane
       yajl-ruby
 

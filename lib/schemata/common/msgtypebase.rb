@@ -19,10 +19,14 @@ module Schemata
 
     def decode(json_msg)
       begin
-        parsed = Schemata::ParsedMessage.new(json_msg)
+        if versions.size == 2
+          parsed = Schemata::ParsedMessage.new(cleanup(json_msg))
+        else
+          parsed = Schemata::ParsedMessage.new(json_msg)
+        end
       rescue Schemata::DecodeError => e
-        raise e unless versions.size == 1
-        return decode_raw_payload(json_msg)
+        return decode_raw_payload(json_msg) if versions.size == 1
+        raise e
       end
       message_version = parsed.version
 
@@ -116,6 +120,19 @@ module Schemata
         Membrane::SchemaValidationError => e
         raise Schemata::DecodeError.new(e.message)
       end
+    end
+
+    def cleanup(json)
+      msg_contents = Yajl::Parser.parse(json)
+      clean_msg = {}
+
+      msg_contents.keys.each do |key|
+        if key == "min_version" || key =~ /^V[0-9]+$/
+          clean_msg[key] = msg_contents[key]
+        end
+      end
+
+      Yajl::Encoder.encode(clean_msg)
     end
 
   end
