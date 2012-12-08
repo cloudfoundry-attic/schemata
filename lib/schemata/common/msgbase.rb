@@ -29,7 +29,7 @@ module Schemata
         vc_klass.const_set(:SCHEMA, schema)
         schema.schemas.each do |key, field_schema|
           vc_klass.send(:define_method, key) do
-            if @contents[key]
+            unless @contents[key].nil?
               return Schemata::HashCopyHelpers.deep_copy(@contents[key])
             end
             nil
@@ -128,6 +128,11 @@ module Schemata
     def message_type
       _, component, msg_type, version = self.class.name.split("::")
       Schemata::const_get(component)::const_get(msg_type)
+    end
+
+    def component
+      _, component, msg_type, version = self.class.name.split("::")
+      Schemata::const_get(component)
     end
 
     def self.included(klass)

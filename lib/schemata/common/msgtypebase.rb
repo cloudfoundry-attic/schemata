@@ -65,6 +65,11 @@ module Schemata
       end
     end
 
+    def component
+      _, component, message_type = self.name.split("::")
+      Schemata::const_get(component)
+    end
+
     def self.extended(o)
       o.extend Dsl
     end
