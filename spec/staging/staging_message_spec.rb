@@ -1,13 +1,8 @@
-require 'yajl'
-require 'support/helpers'
 require 'schemata/staging'
-
-describe Schemata::Staging do
-  it_behaves_like "a schemata component", [1, 2]
-end
+require 'spec_helper'
 
 describe Schemata::Staging::Message do
-  it_behaves_like "a message type", [1, 2]
+  it_behaves_like "a message type"
 end
 
 describe Schemata::Staging::Message::V1 do

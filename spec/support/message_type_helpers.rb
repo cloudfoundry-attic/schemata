@@ -1,4 +1,7 @@
-shared_examples "a message type" do |versions|
+shared_examples "a message type" do
+
+  versions = described_class.constants.select {|x| x =~ /V[0-9]+/ }
+    .map {|x| x.to_s[1..-1].to_i}
 
   let(:message_type_name) { described_class.name.split("::")[2] }
   let(:message_type)      { described_class }
