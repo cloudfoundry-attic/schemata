@@ -9,6 +9,7 @@ module Schemata
 
         define_schema do
           {
+            "cc_partition"    => String,
             "droplet"         => String,
             "version"         => String,
             "instance"        => String,
@@ -31,6 +32,7 @@ module Schemata
 
         define_mock_values do
           {
+            "cc_partition"      => "default",
             "droplet"           => proc { VCAP.secure_uuid },
             "version"           => "0.1.0",
             "instance"          => proc { VCAP.secure_uuid },
