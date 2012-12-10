@@ -116,19 +116,22 @@ shared_examples "a message" do
         ret.should == mock_value
       end
 
-      it "should raise an error if the wrong type is written" do
-        mock_value = component.send(mock_method, version).contents[attr]
+      unless described_class.schema.schemas[attr].kind_of? Membrane::Schema::Any
+        it "should raise an error if the wrong type is written" do
+          mock_value = component.send(mock_method, version).contents[attr]
 
-        if mock_value.kind_of? Integer
-          bad_value = "foo"
-        else
-          bad_value = 1
+          if mock_value.kind_of? Integer
+            bad_value = "foo"
+          else
+            bad_value = 1
+          end
+
+          msg_obj = message.new
+
+          expect {
+            msg_obj.send("#{attr}=", bad_value)
+          }.to raise_error(Schemata::UpdateAttributeError)
         end
-
-        msg_obj = message.new
-        expect {
-          msg_obj.send("#{attr}=", bad_value)
-        }.to raise_error(Schemata::UpdateAttributeError)
       end
     end
   end
