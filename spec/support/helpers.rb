@@ -45,3 +45,10 @@ def decamelize(str)
 
   words.join('_')
 end
+
+def num_mandatory_fields(msg_obj)
+  optional = msg_obj.class.schema.optional_keys
+  mandatory = Set.new(msg_obj.class.schema.schemas.keys)
+  diff = mandatory - optional
+  return diff.size
+end

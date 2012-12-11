@@ -8,6 +8,7 @@ require 'schemata/dea/dea_status_response'
 require 'schemata/dea/exit_message'
 require 'schemata/dea/discover_request'
 require 'schemata/dea/start_request'
+require 'schemata/dea/stop_request'
 
 module Schemata
   module DEA
@@ -49,6 +50,10 @@ module Schemata
 
     def self.mock_start_request(version=StartRequest.current_version)
       StartRequest::const_get("V#{version}").mock
+    end
+
+    def self.mock_stop_request(version=StopRequest.current_version)
+      StopRequest::const_get("V#{version}").mock
     end
   end
 end

@@ -80,11 +80,17 @@ shared_examples "a message type" do
 
       it "should raise an error if the input does not have the valid Schemata \
 structure or a complete flash hash" do
-        mock_hash = component.send(mock_method, 1).contents
-        first_key = mock_hash.keys[0]
-        first_value = mock_hash[first_key]
+        mock_obj = component.send(mock_method, 1)
+        mock_hash = mock_obj.contents
 
-        json = Yajl::Encoder.encode({ first_key => first_value})
+        if num_mandatory_fields(mock_obj) > 1
+          first_key = mock_hash.keys[0]
+          first_value = mock_hash[first_key]
+
+          json = Yajl::Encoder.encode({ first_key => first_value})
+        else
+          json = Yajl::Encoder.encode({})
+        end
         expect {
           msg_obj = message_type.decode(json)
         }.to raise_error(Schemata::DecodeError)
