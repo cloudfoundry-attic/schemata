@@ -14,6 +14,17 @@ module Schemata
           field_schema = @schema.schemas[key]
           next unless field_schema
 
+          # TODO This call to stringify should be removed when cc/dea stop using
+          # Symbols.
+          #
+          # Currently, some fields (for example, 'states' in requests sent
+          # on dea.find.droplet), are are symbols, During Yajl decoding, however,
+          # they become strings. Thus, on the encoding side, Schemata should expect
+          # symbols, but on the decoding side, it should expect strings. To allow
+          # for this in the schema definition, Schemata stringifies all symbols during
+          # construction of Schemata objects.
+          field_value = Schemata::HashCopyHelpers.stringify(field_value)
+
           begin
             field_schema.validate(field_value)
           rescue Membrane::SchemaValidationError => e
@@ -35,7 +46,10 @@ module Schemata
             nil
           end
 
+          # TODO This call to stringify should be removed when cc/dea stops using
+          # symbols. See comment above for a better description.
           vc_klass.send(:define_method, "#{key}=") do |field_value|
+            field_value = Schemata::HashCopyHelpers.stringify(field_value)
             begin
               field_schema.validate(field_value)
             rescue Membrane::SchemaValidationError => e

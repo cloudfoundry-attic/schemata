@@ -1,4 +1,5 @@
 require 'schemata/helpers/hash_copy'
+require 'schemata/helpers/stringify'
 
 describe Schemata::HashCopyHelpers do
   describe "#deep_copy" do
@@ -29,7 +30,7 @@ describe Schemata::HashCopyHelpers do
       copy.should be_an_instance_of Fixnum
 
       # set original to be max fixnum + 1
-      original = 2**(0.size * 8 -2)
+      original = 2**(0.size * 8 - 2)
       copy = Schemata::HashCopyHelpers.deep_copy(original)
       copy.should == original
       copy.should be_an_instance_of Bignum
@@ -84,6 +85,31 @@ describe Schemata::HashCopyHelpers do
       expect do
         Schemata::HashCopyHelpers.deep_copy(klass.new)
       end.to raise_error(described_class::CopyError, /Unexpected class: /)
+    end
+  end
+
+  describe "#stringify" do
+    it "should stringify nil" do
+      str = Schemata::HashCopyHelpers.stringify(nil)
+      str.should == nil
+    end
+
+    it "should stringify a string" do
+      original = "foo"
+      str = Schemata::HashCopyHelpers.stringify(original)
+      str.should == "foo"
+    end
+
+    it "should stringify a symbol" do
+      original = :foo
+      str = Schemata::HashCopyHelpers.stringify(original)
+      str.should == "foo"
+    end
+
+    it "should stringify a hash" do
+      original = { "foo" => :foo }
+      str = Schemata::HashCopyHelpers.stringify(original)
+      str.should == { "foo" => "foo" }
     end
   end
 end
