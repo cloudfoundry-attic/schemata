@@ -25,7 +25,7 @@ module Schemata
               "additional_checks"   => String,
               "environment" => {
                 "LD_LIBRARY_PATH"   => String,
-                "BUNDLE_GEMFILE"    => String,
+                "BUNDLE_GEMFILE"    => enum(String, NilClass),
                 "PATH"              => String,
                 "GEM_PATH"          => String,
               },
@@ -71,7 +71,7 @@ module Schemata
               "additional_checks" => "-e 'puts RUBY_PATCHLEVEL == 357'",
               "environment" => {
                 "LD_LIBRARY_PATH" => "/var/vcap/packages/mysqlclient/lib/mysql:/var/vcap/packages/sqlite/lib:/var/vcap/packages/libpq/lib:/var/vcap/packages/imagemagick/lib:$LD_LIBRARY_PATH",
-                "BUNDLE_GEMFILE" => "null",
+                "BUNDLE_GEMFILE" => nil,
                 "PATH" => "/var/vcap/packages/imagemagick/bin:/var/vcap/packages/dea_transition/rubygems/1.8/bin:/var/vcap/packages/dea_ruby18/bin:/var/vcap/packages/dea_node08/bin:$PATH",
                 "GEM_PATH" => "/var/vcap/packages/dea_transition/rubygems/1.8:$GEM_PATH"
               },

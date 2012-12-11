@@ -28,7 +28,7 @@ module Schemata
                 },
                 "options"               => any,
                 "plan"                  => String,
-                "plan_option"          => any,
+                "plan_option"          => enum(String, NilClass),
                 "type"                  => String,
                 "version"               => String,
                 "vendor"                => String,
