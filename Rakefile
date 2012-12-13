@@ -5,6 +5,14 @@ require "rspec/core/rake_task"
 desc "Run all specs"
 RSpec::Core::RakeTask.new("spec") do |t|
   t.rspec_opts = %w[--color --format documentation]
+  case ENV["BUNDLE_GEMFILE"]
+  when "Gemfile.router"
+    t.pattern = ['spec/router/*_spec.rb', 'spec/common/*_spec.rb']
+  when "Gemfile.dea"
+    t.pattern = ['spec/dea/*_spec.rb', 'spec/common/*_spec.rb']
+  when "Gemfile.staging"
+    t.pattern = ['spec/staging/*_spec.rb', 'spec/common/*_spec/rb']
+  end
 end
 
 desc "Run all specs and provide output for ci"

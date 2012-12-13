@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
     f =~ /lib\/schemata\/(router|common|helpers)/
   end
   gem.executables = `git ls-files`.split($\).grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files = `git ls-files`.split($\).grep(%r{^(test|spec|features)/})
+  gem.test_files = `git ls-files`.split($\).grep(%r{^spec/(router/|common/|support/|spec_helper.rb)})
   gem.require_paths = ["lib"]
 
   gem.add_dependency("membrane")

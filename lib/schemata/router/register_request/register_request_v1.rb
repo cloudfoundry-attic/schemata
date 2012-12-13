@@ -1,3 +1,5 @@
+require 'vcap/common'
+
 module Schemata
   module Router
     module RegisterRequest
