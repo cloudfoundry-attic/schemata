@@ -52,3 +52,46 @@ def num_mandatory_fields(msg_obj)
   diff = mandatory - optional
   return diff.size
 end
+
+def get_allowed_classes(schema)
+  case schema
+  when Membrane::Schema::Bool
+    return Set.new([TrueClass, FalseClass])
+  when Membrane::Schema::Enum
+    return Set.new(schema.elem_schemas.map {|x| get_allowed_classes(x)}).flatten
+  when Membrane::Schema::Class
+    return Set.new([schema.klass])
+  when Membrane::Schema::Record
+    return Set.new([Hash])
+  when Membrane::Schema::List
+    return Set.new([Array])
+  end
+end
+
+def get_unallowed_classes(schema)
+  all_classes = Set.new([Integer, String, Float, TrueClass, FalseClass, NilClass, Hash, Array])
+  allowed_classes = get_allowed_classes(schema)
+  all_classes - allowed_classes
+end
+
+def default_value(klass)
+  # Yes this is silly
+  if klass == Integer
+    return 0
+  elsif klass == String
+    return "foo"
+  elsif klass == Float
+    return 3.14
+  elsif klass == TrueClass
+    return true
+  elsif klass == FalseClass
+    return false
+  elsif klass == NilClass
+    return nil
+  elsif klass == Hash
+    return {}
+  elsif klass == Array
+    return []
+  else
+  end
+end

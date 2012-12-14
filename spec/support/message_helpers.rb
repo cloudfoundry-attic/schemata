@@ -35,11 +35,10 @@ shared_examples "a message" do
       mock_hash = component.send(mock_method, 1).contents
       first_key = mock_hash.keys[0]
       first_value = mock_hash[first_key]
-      if first_value.kind_of? Integer
-        bad_value = "foo"
-      else
-        bad_value = 1
-      end
+
+      schema = message.schema.schemas[first_key]
+      unallowed_classes = get_unallowed_classes(schema)
+      bad_value = default_value(unallowed_classes.to_a[0])
 
       expect {
         msg_obj = message.new({first_key => bad_value})
@@ -120,11 +119,9 @@ shared_examples "a message" do
         it "should raise an error if the wrong type is written" do
           mock_value = component.send(mock_method, version).contents[attr]
 
-          if mock_value.kind_of? Integer
-            bad_value = "foo"
-          else
-            bad_value = 1
-          end
+          schema = message.schema.schemas[attr]
+          unallowed_classes = get_unallowed_classes(schema)
+          bad_value = default_value(unallowed_classes.to_a[0])
 
           msg_obj = message.new
 
