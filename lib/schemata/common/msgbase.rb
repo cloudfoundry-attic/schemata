@@ -1,6 +1,8 @@
 require 'yajl'
 require 'membrane'
 require 'schemata/common/error'
+require 'schemata/helpers/stringify'
+require 'membrane'
 
 module Schemata
   module MessageBase
@@ -29,7 +31,7 @@ module Schemata
           begin
             field_schema.validate(field_value)
           rescue Membrane::SchemaValidationError => e
-            raise Schemata::UpdateAttributeError.new(e.message)
+            raise Schemata::UpdateAttributeError.new(key, e.message)
           end
 
           @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
@@ -54,7 +56,7 @@ module Schemata
             begin
               field_schema.validate(field_value)
             rescue Membrane::SchemaValidationError => e
-              raise Schemata::UpdateAttributeError.new(e.message)
+              raise Schemata::UpdateAttributeError.new(key, e.message)
             end
             @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
             field_value
