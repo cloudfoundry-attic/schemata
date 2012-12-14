@@ -1,7 +1,7 @@
 require 'schemata/common/msgtypebase'
 
 module Schemata
-  module CloudController
+  module Component2
     module Bar
       extend Schemata::MessageTypeBase
     end

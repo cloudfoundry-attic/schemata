@@ -1,7 +1,7 @@
-require 'schemata/cloud_controller/bar'
+require 'schemata/component2/bar'
 
 module Schemata
-  module CloudController
+  module Component2
 
     def self.mock_bar(version=Bar.current_version)
       Bar::const_get("V#{version}").mock

@@ -1,7 +1,7 @@
-require 'schemata/cloud_controller/cloud_controller'
+require 'schemata/component2/component2'
 require 'support/helpers'
 
-describe Schemata::CloudController do
+describe Schemata::Component2 do
   before :each do
     @v10_msg = '{
       "min_version": 10,
@@ -37,21 +37,21 @@ describe Schemata::CloudController do
   describe "#decode" do
     describe "(current version is 10)" do
       before :each do
-        set_current_version(Schemata::CloudController::Bar, 10)
+        set_current_version(Schemata::Component2::Bar, 10)
       end
 
       after :each do
-        reset_version(Schemata::CloudController::Bar)
+        reset_version(Schemata::Component2::Bar)
       end
 
       it "should take a v10 msg and create a v10 obj" do
-        msg_obj = Schemata::CloudController::Bar.decode(@v10_msg)
+        msg_obj = Schemata::Component2::Bar.decode(@v10_msg)
         msg_obj.bar1.should == "first"
         msg_obj.bar2.should == "second"
       end
 
       it "should take a v11 msg and create a v10 obj" do
-        msg_obj = Schemata::CloudController::Bar.decode(@v11_msg)
+        msg_obj = Schemata::Component2::Bar.decode(@v11_msg)
         msg_obj.bar1.should == "1"
         msg_obj.bar2.should == "second"
       end
@@ -59,21 +59,21 @@ describe Schemata::CloudController do
 
     describe "(current version is 11)" do
       before :each do
-        set_current_version(Schemata::CloudController::Bar, 11)
+        set_current_version(Schemata::Component2::Bar, 11)
       end
 
       after :each do
-        reset_version(Schemata::CloudController::Bar)
+        reset_version(Schemata::Component2::Bar)
       end
 
       it "should take a v10 msg and create a v11 obj" do
-        msg_obj = Schemata::CloudController::Bar.decode(@v10_msg)
+        msg_obj = Schemata::Component2::Bar.decode(@v10_msg)
         msg_obj.bar1.should == 5
         msg_obj.bar3.should == "third"
       end
 
       it "should take a v11 msg and create a v11 obj" do
-        msg_obj = Schemata::CloudController::Bar.decode(@v11_msg)
+        msg_obj = Schemata::Component2::Bar.decode(@v11_msg)
         msg_obj.bar1.should == 1
         msg_obj.bar3.should == "third"
       end
@@ -83,15 +83,15 @@ describe Schemata::CloudController do
   describe "#encode" do
     describe "(current version is 10)" do
       before :each do
-        set_current_version(Schemata::CloudController::Bar, 10)
+        set_current_version(Schemata::Component2::Bar, 10)
       end
 
       after :each do
-        reset_version(Schemata::CloudController::Bar)
+        reset_version(Schemata::Component2::Bar)
       end
 
       it "should take a v10 obj and encode a json msg" do
-        v10_obj = Schemata::CloudController::Bar::V10.new(@v10_hash)
+        v10_obj = Schemata::Component2::Bar::V10.new(@v10_hash)
         json_msg = v10_obj.encode
         returned_hash = Yajl::Parser.parse(json_msg)
 
@@ -108,12 +108,12 @@ describe Schemata::CloudController do
 
     describe "(current version is 11)" do
       before :each do
-        set_current_version(Schemata::CloudController::Bar, 11)
+        set_current_version(Schemata::Component2::Bar, 11)
       end
 
       it "should take a v11 obj and encode a json msg" do
         aux_data = {"bar2" => "second" }
-        v11_obj = Schemata::CloudController::Bar::V11.new(@v11_hash, aux_data)
+        v11_obj = Schemata::Component2::Bar::V11.new(@v11_hash, aux_data)
         json_msg = v11_obj.encode
         returned_hash = Yajl::Parser.parse(json_msg)
 
@@ -133,7 +133,7 @@ describe Schemata::CloudController do
       end
 
       after :each do
-        reset_version(Schemata::CloudController::Bar)
+        reset_version(Schemata::Component2::Bar)
       end
     end
   end

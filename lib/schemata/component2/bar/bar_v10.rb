@@ -3,7 +3,7 @@ require 'schemata/common/msgtypebase'
 require 'schemata/helpers/hash_copy'
 
 module Schemata
-  module CloudController
+  module Component2
     module Bar
 
       version 10 do
