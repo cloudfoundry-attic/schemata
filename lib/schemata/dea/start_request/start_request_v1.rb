@@ -9,7 +9,7 @@ module Schemata
 
         define_schema do
           {
-            "droplet"               => String,
+            "droplet"               => enum(String, Integer),
             "name"                  => String,
             "uris"                  => [String],
             "runtime"               => String,

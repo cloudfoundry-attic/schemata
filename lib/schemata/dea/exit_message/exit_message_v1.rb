@@ -16,7 +16,7 @@ module Schemata
             "index"           => Integer,
             "reason"          => String,
 
-            "crash_timestamp" => Integer,
+            optional("crash_timestamp") => Integer,
           }
         end
 

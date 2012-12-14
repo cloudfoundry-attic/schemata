@@ -8,7 +8,7 @@ module Schemata
 
         define_schema do
           {
-            "droplet"               => String,
+            "droplet"               => enum(String, Integer),
             optional("version")     => String,
             optional("instances")   => [String],
             optional("indices")     => [Integer]

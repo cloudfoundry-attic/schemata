@@ -13,7 +13,7 @@ module Schemata
         define_schema do
           {
             "droplets" => [{
-              optional("cc_partition") => String,
+              optional("cc_partition") => enum(String, NilClass),
               "droplet"             => String,
               "version"             => String,
               "instance"            => String,

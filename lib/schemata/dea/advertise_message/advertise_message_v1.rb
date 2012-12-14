@@ -11,7 +11,7 @@ module Schemata
           {
             "id" => String,
             "runtimes" => [String],
-            "available" => Integer,
+            "available_memory" => Integer,
             "prod" => bool,
           }
         end
@@ -30,7 +30,7 @@ module Schemata
           {
             "id" => proc { VCAP.secure_uuid },
             "runtimes"  => ["ruby18", "ruby19", "java"],
-            "available" => 1024,
+            "available_memory" => 1024,
             "prod"      => false,
           }
         end

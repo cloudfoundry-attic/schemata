@@ -12,7 +12,7 @@ module Schemata
             optional("app")                   => String,
             "uris"                            => [String],
             "host"                            => String,
-            "port"                            => Integer,
+            "port"                            => enum(NilClass, Integer),
             "tags"  => {
               optional("framework")           => String,
               optional("runtime")             => String,

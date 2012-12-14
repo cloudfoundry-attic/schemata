@@ -10,8 +10,8 @@ module Schemata
         define_schema do
           {
             "droplet"   => String,
-            "states"    => [String],
-            "version"   => String,
+            optional("states")    => [String],
+            optional("version")   => String,
 
             optional("path")          => String,
             optional("instance_ids")  => [String],

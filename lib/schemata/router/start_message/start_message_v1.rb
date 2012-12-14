@@ -1,3 +1,5 @@
+#require "vcap/common"
+
 module Schemata
   module Router
     module StartMessage
@@ -7,7 +9,7 @@ module Schemata
         define_schema do
           {
             "id" => String,
-            "version" => String,
+            "version" => Float,
           }
         end
 
@@ -24,7 +26,7 @@ module Schemata
         define_mock_values do
           {
             "id" => proc { VCAP.secure_uuid },
-            "version" => "0.1.0",
+            "version" => 0.1,
           }
         end
       end
