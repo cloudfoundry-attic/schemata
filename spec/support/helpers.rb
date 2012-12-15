@@ -53,6 +53,10 @@ def num_mandatory_fields(msg_obj)
   return diff.size
 end
 
+def all_classes
+  all_classes = Set.new([Integer, String, Float, TrueClass, FalseClass, NilClass, Hash, Array])
+end
+
 def get_allowed_classes(schema)
   case schema
   when Membrane::Schema::Bool
@@ -65,11 +69,12 @@ def get_allowed_classes(schema)
     return Set.new([Hash])
   when Membrane::Schema::List
     return Set.new([Array])
+  when Membrane::Schema::Value
+    return Set.new([schema.value.class])
   end
 end
 
 def get_unallowed_classes(schema)
-  all_classes = Set.new([Integer, String, Float, TrueClass, FalseClass, NilClass, Hash, Array])
   allowed_classes = get_allowed_classes(schema)
   all_classes - allowed_classes
 end
