@@ -2,6 +2,7 @@ require 'schemata/health_manager/status_request'
 require 'schemata/health_manager/status_flapping_response'
 require 'schemata/health_manager/status_crashed_response'
 require 'schemata/health_manager/health_request'
+require 'schemata/health_manager/health_response'
 
 module Schemata
   module HealthManager
@@ -19,6 +20,10 @@ module Schemata
 
     def self.mock_health_request(version=HealthRequest.current_version)
       HealthRequest::const_get("V#{version}").mock
+    end
+
+    def self.mock_health_response(version=HealthResponse.current_version)
+      HealthResponse::const_get("V#{version}").mock
     end
   end
 end
