@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gemspec :name => 'schemata-health_manager'
+
+gem 'vcap_common', :git => 'https://github.com/cloudfoundry/vcap-common.git'
+
+group :test do
+  gem 'rspec'
+  gem 'ci_reporter'
+end
