@@ -11,7 +11,9 @@ RSpec::Core::RakeTask.new("spec") do |t|
   when "Gemfile.dea"
     t.pattern = ['spec/dea/*_spec.rb', 'spec/common/*_spec.rb']
   when "Gemfile.staging"
-    t.pattern = ['spec/staging/*_spec.rb', 'spec/common/*_spec/rb']
+    t.pattern = ['spec/staging/*_spec.rb', 'spec/common/*_spec.rb']
+  when "Gemfile.cloud_controller"
+    t.pattern = ['spec/cloud_controller/*_spec.rb', 'spec/common/*_spec.rb']
   end
 end
 
