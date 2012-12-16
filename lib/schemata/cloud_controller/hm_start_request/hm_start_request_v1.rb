@@ -10,8 +10,8 @@ module Schemata
           {
             "droplet"       => String,
             "op"            => "START",
-            "last_updated"  => Integer,
-            "version"       => String,
+            "last_updated"  => enum(Integer, NilClass),
+            "version"       => enum(String, NilClass),
             "indices"       => [Integer],
           }
         end
