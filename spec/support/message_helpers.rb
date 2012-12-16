@@ -99,7 +99,7 @@ shared_examples "a message" do
 
   described_class.schema.schemas.keys.each do |attr|
     describe "##{attr}" do
-      it "should the attribute if it was specified at instantiation" do
+      it "should return the attribute if it was specified at instantiation" do
         mock_value = component.send(mock_method, version).contents[attr]
         msg_obj = message.new({ attr => mock_value })
         msg_obj.send(attr).should == mock_value
@@ -115,6 +115,21 @@ shared_examples "a message" do
       it "should return nil if the attribute was never set" do
         msg_obj = message.new
         msg_obj.send(attr).should be_nil
+      end
+
+      if described_class.schema.optional_keys.include? attr
+        context "the attribute is optional" do
+          it "should allow nil values during instantiation" do
+            mock_value = component.send(mock_method, version).contents[attr]
+            hash = { attr => mock_value }
+            msg_obj = message.new(hash)
+          end
+
+          it "should be able to set the attribute to nil" do
+            msg_obj = message.new
+            msg_obj.send("#{attr}=", nil)
+          end
+        end
       end
     end
 

@@ -54,10 +54,12 @@ module Schemata
           # symbols. See comment above for a better description.
           vc_klass.send(:define_method, "#{key}=") do |field_value|
             field_value = Schemata::HashCopyHelpers.stringify(field_value)
-            begin
-              field_schema.validate(field_value)
-            rescue Membrane::SchemaValidationError => e
-              raise Schemata::UpdateAttributeError.new(key, e.message)
+            unless schema.optional_keys.include?(key) && field_value == nil
+              begin
+                field_schema.validate(field_value)
+              rescue Membrane::SchemaValidationError => e
+                raise Schemata::UpdateAttributeError.new(key, e.message)
+              end
             end
             @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
             field_value
