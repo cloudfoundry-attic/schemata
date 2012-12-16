@@ -8,7 +8,7 @@ module Schemata
           {
             'indices' => [{
               'index'       => Integer,
-              'since'       => Integer,
+              'since'       => enum(Integer, Float, NilClass),
             }]
           }
         end

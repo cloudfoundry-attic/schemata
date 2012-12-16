@@ -8,11 +8,12 @@ module Schemata
 
         define_schema do
           {
-            "droplet"       => String,
-            "op"            => "START",
-            "last_updated"  => enum(Integer, NilClass),
-            "version"       => enum(String, NilClass),
-            "indices"       => [Integer],
+            "droplet"             => String,
+            "op"                  => "START",
+            "last_updated"        => enum(Integer, NilClass),
+            "version"             => enum(String, NilClass),
+            "indices"             => [Integer],
+            optional("flapping")  => bool
           }
         end
 
@@ -32,7 +33,8 @@ module Schemata
             "op"            => "START",
             "last_updated"  => proc { Time.now.to_i },
             "version"       => proc { VCAP.secure_uuid },
-            "indices"       => [0, 1]
+            "indices"       => [0, 1],
+            "flapping"      => false,
           }
         end
       end

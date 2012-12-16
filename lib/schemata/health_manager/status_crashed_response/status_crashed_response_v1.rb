@@ -10,7 +10,7 @@ module Schemata
           {
             "instances" => [{
               "instance"        => String,
-              "since"           => Integer,
+              "since"           => enum(Integer, Float, NilClass),
             }]
           }
         end
