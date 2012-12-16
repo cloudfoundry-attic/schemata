@@ -14,6 +14,7 @@ module Schemata
         @contents = {}
 
         data.each do |key, field_value|
+          key = Schemata::HashCopyHelpers.stringify(key)
           field_schema = @schema.schemas[key]
           next unless field_schema
 

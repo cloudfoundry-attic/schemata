@@ -44,6 +44,18 @@ shared_examples "a message" do
         msg_obj = message.new({first_key => bad_value})
       }.to raise_error(Schemata::UpdateAttributeError)
     end
+
+    it "should stringify keys when they are symbols" do
+      mock_hash = component.send(mock_method, 1).contents
+      first_key = mock_hash.keys[0]
+      first_value = mock_hash[first_key]
+
+      input_hash = {
+        first_key.to_sym => first_value
+      }
+      msg_obj = message.new(input_hash)
+      msg_obj.send(first_key).should_not be_nil
+    end
   end
 
   describe "#encode" do
