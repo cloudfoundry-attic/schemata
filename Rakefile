@@ -7,15 +7,15 @@ RSpec::Core::RakeTask.new("spec") do |t|
   t.rspec_opts = %w[--color --format documentation]
   case ENV["BUNDLE_GEMFILE"]
   when "Gemfile.router"
-    t.pattern = ['spec/router/*_spec.rb', 'spec/common/*_spec.rb']
+    t.pattern = ['spec/router_spec.rb', 'spec/common/*_spec.rb']
   when "Gemfile.dea"
-    t.pattern = ['spec/dea/*_spec.rb', 'spec/common/*_spec.rb']
+    t.pattern = ['spec/dea_spec.rb', 'spec/common/*_spec.rb']
   when "Gemfile.staging"
-    t.pattern = ['spec/staging/*_spec.rb', 'spec/common/*_spec.rb']
+    t.pattern = ['spec/staging_spec.rb', 'spec/common/*_spec.rb']
   when "Gemfile.cloud_controller"
-    t.pattern = ['spec/cloud_controller/*_spec.rb', 'spec/common/*_spec.rb']
+    t.pattern = ['spec/cloud_controller_spec.rb', 'spec/common/*_spec.rb']
   when "Gemfile.health_manager"
-    t.pattern = ['spec/health_manager/*_spec.rb', 'spec/common/*_spec.rb']
+    t.pattern = ['spec/health_manager_spec.rb', 'spec/common/*_spec.rb']
   end
 end
 

@@ -16,7 +16,20 @@ shared_examples "a schemata component" do
         end
       end
     end
+
+    describe msg_type do
+      message_type = described_class::const_get(msg_type)
+      it_behaves_like "a message type", message_type do
+        let (:message_type)       { described_class::const_get(msg_type) }
+        let (:message_type_name)  { msg_type.to_s }
+        let (:component)          { described_class }
+        let (:component_name)     { component.name.split("::")[1] }
+
+        let (:mock_method)        { "mock_#{decamelize(msg_type)}" }
+      end
+    end
   end
+
 end
 
 shared_examples "a mocking method" do |version|

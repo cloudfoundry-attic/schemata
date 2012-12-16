@@ -1,16 +1,5 @@
-shared_examples "a message" do
-
-  version = described_class.version
-
-  let(:component_name)    { described_class.name.split("::")[1] }
-  let(:message_type_name) { described_class.name.split("::")[2] }
-  let(:message_name)      { described_class.name.split("::")[3] }
-
-  let(:component)         { Schemata::const_get(component_name) }
-  let(:message_type)      { component::const_get(message_type_name) }
-  let(:message)           { described_class }
-
-  let(:mock_method)       { "mock_#{decamelize(message_type_name)}" }
+shared_examples "a message" do |msg|
+  version = msg.version
 
   before :each do
     set_current_version(message_type, version)
@@ -21,7 +10,7 @@ shared_examples "a message" do
   end
 
   describe "#new" do
-    it "should create a #{described_class} object with an incomplete hash" do
+    it "should create a #{msg} object with an incomplete hash" do
       mock_hash = component.send(mock_method, 1).contents
       first_key = mock_hash.keys[0]
       first_value = mock_hash[first_key]
@@ -97,7 +86,7 @@ shared_examples "a message" do
     end
   end
 
-  described_class.schema.schemas.keys.each do |attr|
+  msg.schema.schemas.keys.each do |attr|
     describe "##{attr}" do
       it "should return the attribute if it was specified at instantiation" do
         mock_value = component.send(mock_method, version).contents[attr]
@@ -117,7 +106,7 @@ shared_examples "a message" do
         msg_obj.send(attr).should be_nil
       end
 
-      if described_class.schema.optional_keys.include? attr
+      if msg.schema.optional_keys.include? attr
         context "the attribute is optional" do
           it "should allow nil values during instantiation" do
             mock_value = component.send(mock_method, version).contents[attr]
@@ -142,7 +131,7 @@ shared_examples "a message" do
         ret.should == mock_value
       end
 
-      unless described_class.schema.schemas[attr].kind_of? Membrane::Schema::Any
+      unless msg.schema.schemas[attr].kind_of? Membrane::Schema::Any
         it "should raise an error if the wrong type is written" do
           mock_value = component.send(mock_method, version).contents[attr]
 
