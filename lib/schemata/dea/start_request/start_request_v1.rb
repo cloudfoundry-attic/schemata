@@ -74,7 +74,8 @@ module Schemata
             "cc_partition"          => String,
             "debug"                 => any,
             "console"               => any,
-            "index"                 => Integer
+            "index"                 => Integer,
+            optional("flapping")    => bool,
           }
         end
 
@@ -132,7 +133,8 @@ module Schemata
             "cc_partition" => "default",
             "debug" => nil,
             "console" => nil,
-            "index" => 0
+            "index" => 0,
+            "flapping" => false,
           }
         end
       end
