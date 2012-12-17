@@ -4,7 +4,7 @@ require 'schemata/common/msgtypebase'
 require 'vcap/common'
 
 module Schemata
-  module DEA
+  module Dea
     module HeartbeatResponse
 
       version 1 do

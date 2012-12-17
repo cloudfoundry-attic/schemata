@@ -2,7 +2,7 @@ require 'schemata/helpers/hash_copy'
 require 'schemata/common/msgtypebase'
 
 module Schemata
-  module DEA
+  module Dea
     module AdvertiseMessage
       version 1 do
         include_preschemata

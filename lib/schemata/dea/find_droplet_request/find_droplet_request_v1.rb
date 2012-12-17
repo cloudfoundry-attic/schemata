@@ -2,7 +2,7 @@ require 'schemata/common/msgtypebase'
 require 'vcap/common'
 
 module Schemata
-  module DEA
+  module Dea
     module FindDropletRequest
       version 1 do
         include_preschemata

@@ -1,7 +1,7 @@
 require 'schemata/common/msgtypebase'
 
 module Schemata
-  module DEA
+  module Dea
     module StopRequest
       extend Schemata::MessageTypeBase
     end

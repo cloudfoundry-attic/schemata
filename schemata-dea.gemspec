@@ -2,7 +2,7 @@ require File.expand_path('../lib/schemata/dea/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name = "schemata-dea"
-  gem.version = Schemata::DEA::VERSION
+  gem.version = Schemata::Dea::VERSION
   gem.date = '2012-12-10'
   gem.summary = 'validation for cloundfoundry DEA messages'
   gem.homepage = 'http://www.cloudfoundry.org'

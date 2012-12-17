@@ -1,5 +1,5 @@
 module Schemata
-  module DEA
+  module Dea
     module UpdateRequest
       version 1 do
         include_preschemata

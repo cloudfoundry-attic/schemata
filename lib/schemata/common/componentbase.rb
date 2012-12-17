@@ -24,6 +24,10 @@ module Schemata
       self.constants.select { |x| x != :VERSION }
     end
 
+    def component_name
+      self.name.split("::")[1]
+    end
+
     def eigenclass
       class << self; self; end
     end
@@ -38,7 +42,12 @@ module Schemata
       end
     end
 
+    def require_message_classes
+      Dir.glob("./lib/schemata/#{decamelize(component_name)}/*.rb", &method(:require))
+    end
+
     def self.extended(klass)
+      klass.require_message_classes
       klass.register_mock_methods
     end
 
