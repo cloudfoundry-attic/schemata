@@ -7,7 +7,3 @@ module Schemata
     end
   end
 end
-
-Dir[File.dirname(__FILE__) + '/hello_message/*.rb'].each do |file|
-  require file
-end

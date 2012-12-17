@@ -7,7 +7,3 @@ module Schemata
     end
   end
 end
-
-Dir[File.dirname(__FILE__) + '/droplet_status_response/*.rb'].each do |file|
-  require file
-end
