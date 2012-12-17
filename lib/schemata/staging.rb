@@ -1,9 +1,8 @@
-require 'schemata/staging/message'
+Dir.glob(File.dirname(__FILE__) + '/staging/*.rb', &method(:require))
+require 'schemata/common/componentbase'
 
 module Schemata
   module Staging
-    def self.mock_message(version=Message.current_version)
-      Message::const_get("V#{version}").mock
-    end
+    extend Schemata::ComponentBase
   end
 end

@@ -1,19 +1,8 @@
-require 'schemata/cloud_controller/droplet_updated_message'
-require 'schemata/cloud_controller/hm_start_request'
-require 'schemata/cloud_controller/hm_stop_request'
+Dir.glob(File.dirname(__FILE__) + '/cloud_controller/*.rb', &method(:require))
+require 'schemata/common/componentbase'
 
 module Schemata
   module CloudController
-    def self.mock_droplet_updated_message(version=DropletUpdatedMessage.current_version)
-      DropletUpdatedMessage::const_get("V#{version}").mock
-    end
-
-    def self.mock_hm_start_request(version=HmStartRequest.current_version)
-      HmStartRequest::const_get("V#{version}").mock
-    end
-
-    def self.mock_hm_stop_request(version=HmStopRequest.current_version)
-      HmStopRequest::const_get("V#{version}").mock
-    end
+    extend Schemata::ComponentBase
   end
 end

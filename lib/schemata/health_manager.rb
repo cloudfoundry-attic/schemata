@@ -1,29 +1,8 @@
-require 'schemata/health_manager/status_request'
-require 'schemata/health_manager/status_flapping_response'
-require 'schemata/health_manager/status_crashed_response'
-require 'schemata/health_manager/health_request'
-require 'schemata/health_manager/health_response'
+Dir.glob(File.dirname(__FILE__) + '/health_manager/*.rb', &method(:require))
+require 'schemata/common/componentbase'
 
 module Schemata
   module HealthManager
-    def self.mock_status_request(version=StatusRequest.current_version)
-      StatusRequest::const_get("V#{version}").mock
-    end
-
-    def self.mock_status_flapping_response(version=StatusFlappingResponse.current_version)
-      StatusFlappingResponse::const_get("V#{version}").mock
-    end
-
-    def self.mock_status_crashed_response(version=StatusCrashedResponse.current_version)
-      StatusCrashedResponse::const_get("V#{version}").mock
-    end
-
-    def self.mock_health_request(version=HealthRequest.current_version)
-      HealthRequest::const_get("V#{version}").mock
-    end
-
-    def self.mock_health_response(version=HealthResponse.current_version)
-      HealthResponse::const_get("V#{version}").mock
-    end
+    extend Schemata::ComponentBase
   end
 end
