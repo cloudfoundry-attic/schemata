@@ -14,7 +14,7 @@ module Schemata
         @contents = {}
 
         data.each do |key, field_value|
-          key = Schemata::HashCopyHelpers.stringify(key)
+          key = Schemata::Helpers.stringify(key)
           field_schema = @schema.schemas[key]
           next unless field_schema
 
@@ -27,7 +27,7 @@ module Schemata
           # symbols, but on the decoding side, it should expect strings. To allow
           # for this in the schema definition, Schemata stringifies all symbols during
           # construction of Schemata objects.
-          field_value = Schemata::HashCopyHelpers.stringify(field_value)
+          field_value = Schemata::Helpers.stringify(field_value)
 
           begin
             field_schema.validate(field_value)
@@ -35,7 +35,7 @@ module Schemata
             raise Schemata::UpdateAttributeError.new(key, e.message)
           end
 
-          @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
+          @contents[key] = Schemata::Helpers.deep_copy(field_value)
         end
       end
 
@@ -45,7 +45,7 @@ module Schemata
         schema.schemas.each do |key, field_schema|
           vc_klass.send(:define_method, key) do
             unless @contents[key].nil?
-              return Schemata::HashCopyHelpers.deep_copy(@contents[key])
+              return Schemata::Helpers.deep_copy(@contents[key])
             end
             nil
           end
@@ -53,7 +53,7 @@ module Schemata
           # TODO This call to stringify should be removed when cc/dea stops using
           # symbols. See comment above for a better description.
           vc_klass.send(:define_method, "#{key}=") do |field_value|
-            field_value = Schemata::HashCopyHelpers.stringify(field_value)
+            field_value = Schemata::Helpers.stringify(field_value)
             unless schema.optional_keys.include?(key) && field_value == nil
               begin
                 field_schema.validate(field_value)
@@ -61,7 +61,7 @@ module Schemata
                 raise Schemata::UpdateAttributeError.new(key, e.message)
               end
             end
-            @contents[key] = Schemata::HashCopyHelpers.deep_copy(field_value)
+            @contents[key] = Schemata::Helpers.deep_copy(field_value)
             field_value
           end
         end
@@ -69,7 +69,7 @@ module Schemata
       end
 
       def contents
-        Schemata::HashCopyHelpers.deep_copy(@contents)
+        Schemata::Helpers.deep_copy(@contents)
       end
 
       def empty?

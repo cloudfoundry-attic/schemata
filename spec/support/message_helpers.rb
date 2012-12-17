@@ -57,7 +57,7 @@ shared_examples "a message" do |msg|
         json_hash.should have_key "V1"
         json_hash.should have_key "min_version"
 
-        data = Schemata::HashCopyHelpers.deep_copy(json_hash["V1"])
+        data = Schemata::Helpers.deep_copy(json_hash["V1"])
 
         json_hash.delete("V1")
         json_hash.delete("min_version")
@@ -75,7 +75,7 @@ shared_examples "a message" do |msg|
         end
         json_hash.should have_key "min_version"
 
-        data = Schemata::HashCopyHelpers.deep_copy(json_hash["V#{version}"])
+        data = Schemata::Helpers.deep_copy(json_hash["V#{version}"])
         1.upto(version) do |i|
           json_hash.delete("V#{i}")
         end

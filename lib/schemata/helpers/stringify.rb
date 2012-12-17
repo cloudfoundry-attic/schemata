@@ -1,5 +1,5 @@
 module Schemata
-  module HashCopyHelpers
+  module Helpers
 
     def self.stringify(node)
       case node

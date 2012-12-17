@@ -1,5 +1,6 @@
 require 'schemata/common/msgbase'
 require 'schemata/common/parsed_msg'
+require 'schemata/helpers/decamelize'
 
 module Schemata
   module MessageTypeBase
@@ -78,31 +79,11 @@ module Schemata
       self.name.split("::")[2]
     end
 
-    def decamelize(str)
-      words = []
-      curr_word = ""
-      0.upto(str.length - 1) do |i|
-        ch = str[i]
-        if ch =~ /[A-Z]/
-          words.push(curr_word)
-          curr_word = ""
-        end
-        curr_word += ch
-      end
-      words.push(curr_word)
-      words.map! { |x| x.downcase }
-
-      # If the first letter is capitalized, then the first word here is empty
-      words.shift if words[0] == ""
-
-      words.join('_')
-    end
-
     def require_message_versions
       path = "./lib/schemata/"
-      path << decamelize(component_name)
+      path << Schemata::Helpers.decamelize(component_name)
       path << "/"
-      path << decamelize(message_type_name)
+      path << Schemata::Helpers.decamelize(message_type_name)
       path << "/*.rb"
 
       Dir.glob(path, &method(:require))

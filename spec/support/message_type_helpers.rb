@@ -43,7 +43,7 @@ shared_examples "a message type" do |msg_type|
         msg_hash = {
           "V1" => data,
           "min_version" => 1
-        }.merge(Schemata::HashCopyHelpers.deep_copy(data))
+        }.merge(Schemata::Helpers.deep_copy(data))
         json = Yajl::Encoder.encode(msg_hash)
 
         msg_obj = message_type.decode(json)
@@ -110,7 +110,7 @@ structure or a complete flash hash" do
 
         it "should return a V2 object a given a mixed (flat hash + V1-encoded) json" do
           msg_hash = component.send(mock_method, 2).contents
-          v1_hash = Schemata::HashCopyHelpers.deep_copy(msg_hash)
+          v1_hash = Schemata::Helpers.deep_copy(msg_hash)
           msg_hash["V1"] = v1_hash
           msg_hash["min_version"] = 1
 
@@ -140,7 +140,7 @@ structure or a complete flash hash" do
 
         it "should return a V2 object given a V2-encoded object" do
           data = component.send(mock_method, 2).contents
-          v2_hash = Schemata::HashCopyHelpers.deep_copy(data)
+          v2_hash = Schemata::Helpers.deep_copy(data)
           msg_hash = {"V2" => v2_hash, "V1" => {}, "min_version" => 1}
 
           json = Yajl::Encoder.encode(msg_hash)

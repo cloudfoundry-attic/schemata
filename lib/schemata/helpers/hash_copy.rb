@@ -1,5 +1,5 @@
 module Schemata
-  module HashCopyHelpers
+  module Helpers
     class CopyError < StandardError; end
 
     def self.deep_copy(node)

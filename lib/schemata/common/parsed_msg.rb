@@ -37,7 +37,7 @@ module Schemata
     end
 
     def contents
-      Schemata::HashCopyHelpers.deep_copy(@contents)
+      Schemata::Helpers.deep_copy(@contents)
     end
   end
 end

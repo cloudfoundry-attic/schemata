@@ -18,7 +18,7 @@ module Schemata
         define_min_version 13
 
         define_upvert do |old_data|
-          new_data = Schemata::HashCopyHelpers.deep_copy(old_data)
+          new_data = Schemata::Helpers.deep_copy(old_data)
           new_data.delete("foo2")
           new_data["foo4"] = "foo"
           new_data

@@ -20,7 +20,7 @@ module Schemata
         define_constant :DEFAULT_FOO3, 1
 
         define_upvert do |old_data|
-          new_data = Schemata::HashCopyHelpers.deep_copy(old_data)
+          new_data = Schemata::Helpers.deep_copy(old_data)
           new_data["foo3"] = self::DEFAULT_FOO3
           new_data
         end

@@ -1,9 +1,10 @@
 require 'support/helpers'
+require 'schemata/helpers/decamelize'
 
 shared_examples "a schemata component" do
 
   described_class.constants.select { |x| x != :VERSION }.each do |msg_type|
-    describe ".mock_#{decamelize(msg_type.to_s)}" do
+    describe ".mock_#{Schemata::Helpers.decamelize(msg_type.to_s)}" do
       versions = described_class::const_get(msg_type).constants.select { |x| x =~ /V[0-9]+/ }
       versions.map { |x| x = x.to_s[1..-1].to_i }.each do |version|
         it_behaves_like "a mocking method", version do
@@ -12,7 +13,7 @@ shared_examples "a schemata component" do
           let(:component)         { described_class }
           let(:component_name)    { component.name.split("::")[1] }
 
-          let(:mock_method) { "mock_#{decamelize(msg_type)}"}
+          let(:mock_method) { "mock_#{Schemata::Helpers.decamelize(msg_type)}"}
         end
       end
     end
@@ -25,7 +26,7 @@ shared_examples "a schemata component" do
         let (:component)          { described_class }
         let (:component_name)     { component.name.split("::")[1] }
 
-        let (:mock_method)        { "mock_#{decamelize(msg_type)}" }
+        let (:mock_method)        { "mock_#{Schemata::Helpers.decamelize(msg_type)}" }
       end
     end
   end
