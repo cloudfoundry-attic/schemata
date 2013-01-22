@@ -1,5 +1,5 @@
 module Schemata
   module Staging
-    VERSION = "0.0.3.beta1"
+    VERSION = "0.0.3.beta2"
   end
 end
