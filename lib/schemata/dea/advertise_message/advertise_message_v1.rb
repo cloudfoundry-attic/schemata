@@ -1,5 +1,6 @@
 require 'schemata/helpers/hash_copy'
 require 'schemata/common/msgtypebase'
+require 'vcap/common'
 
 module Schemata
   module Dea
