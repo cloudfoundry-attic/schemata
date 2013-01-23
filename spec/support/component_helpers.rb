@@ -36,13 +36,9 @@ end
 shared_examples "a mocking method" do |version|
 
   context "when current_version is #{version}" do
-    before :each do
-      set_current_version(message_type, version)
-    end
+    before { set_current_version(message_type, version) }
 
-    after :each do
-      reset_version(message_type)
-    end
+    after { reset_version(message_type) }
 
     it "should return a V#{version} object if called with no argument" do
       msg_obj = component.send(mock_method)
@@ -58,7 +54,7 @@ shared_examples "a mocking method" do |version|
 
     it "should raise an error if called with input > #{version}" do
       expect {
-        msg_obj = component.send(mock_method, version + 1)
+        component.send(mock_method, version + 1)
       }.to raise_error(NameError)
     end
   end

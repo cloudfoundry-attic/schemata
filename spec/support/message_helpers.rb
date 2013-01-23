@@ -23,14 +23,13 @@ shared_examples "a message" do |msg|
     it "should raise an error if the hash contains incorrect types" do
       mock_hash = component.send(mock_method, 1).contents
       first_key = mock_hash.keys[0]
-      first_value = mock_hash[first_key]
 
       schema = message.schema.schemas[first_key]
       unallowed_classes = get_unallowed_classes(schema)
       bad_value = default_value(unallowed_classes.to_a[0])
 
       expect {
-        msg_obj = message.new({first_key => bad_value})
+        message.new(first_key => bad_value)
       }.to raise_error(Schemata::UpdateAttributeError)
     end
 
@@ -75,7 +74,6 @@ shared_examples "a message" do |msg|
         end
         json_hash.should have_key "min_version"
 
-        data = Schemata::Helpers.deep_copy(json_hash["V#{version}"])
         1.upto(version) do |i|
           json_hash.delete("V#{i}")
         end
@@ -111,7 +109,7 @@ shared_examples "a message" do |msg|
           it "should allow nil values during instantiation" do
             mock_value = component.send(mock_method, version).contents[attr]
             hash = { attr => mock_value }
-            msg_obj = message.new(hash)
+            expect { message.new(hash) }.not_to raise_error
           end
 
           it "should be able to set the attribute to nil" do
@@ -133,8 +131,6 @@ shared_examples "a message" do |msg|
 
       unless msg.schema.schemas[attr].kind_of? Membrane::Schema::Any
         it "should raise an error if the wrong type is written" do
-          mock_value = component.send(mock_method, version).contents[attr]
-
           schema = message.schema.schemas[attr]
           unallowed_classes = get_unallowed_classes(schema)
           bad_value = default_value(unallowed_classes.to_a[0])

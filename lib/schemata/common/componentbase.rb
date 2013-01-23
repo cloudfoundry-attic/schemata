@@ -27,15 +27,18 @@ module Schemata
     end
 
     def require_message_classes
-      path = "./lib/schemata/"
-      path << Schemata::Helpers.decamelize(component_name)
-      path << "/*.rb"
+      path = [
+        File.expand_path("../../", __FILE__),
+        "/",
+        Schemata::Helpers.decamelize(component_name),
+        "/*.rb"
+      ].join
       Dir.glob(path, &method(:require))
     end
 
-    def self.extended(klass)
-      klass.require_message_classes
-      klass.register_mock_methods
+    def self.extended(mod)
+      mod.require_message_classes
+      mod.register_mock_methods
     end
 
   end

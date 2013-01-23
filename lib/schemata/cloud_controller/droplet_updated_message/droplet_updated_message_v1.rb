@@ -15,11 +15,11 @@ module Schemata
 
         define_min_version 1
 
-        define_upvert do |old_data|
+        define_upvert do |_|
           raise NotImplementedError.new
         end
 
-        define_generate_old_fields do |msg_obj|
+        define_generate_old_fields do |_|
           raise NotImplementedError.new
         end
 

@@ -80,11 +80,14 @@ module Schemata
     end
 
     def require_message_versions
-      path = "./lib/schemata/"
-      path << Schemata::Helpers.decamelize(component_name)
-      path << "/"
-      path << Schemata::Helpers.decamelize(message_type_name)
-      path << "/*.rb"
+      path = [
+        File.expand_path("../../", __FILE__),
+        "/",
+        Schemata::Helpers.decamelize(component_name),
+        "/",
+        Schemata::Helpers.decamelize(message_type_name),
+        "/*.rb"
+      ].join
 
       Dir.glob(path, &method(:require))
     end

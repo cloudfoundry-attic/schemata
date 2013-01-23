@@ -25,14 +25,14 @@ module Schemata
 
         define_generate_old_fields do |msg_obj|
           first = msg_obj.foo3.length > 0 ? msg_obj.foo3[0] : 1
-          old_fields = {"foo3" => first}
+          {"foo3" => first}
         end
 
-        define_mock_values({
+        define_mock_values(
           "foo1" => "foo",
           "foo2" => 2,
           "foo3" => lambda { [Random.rand(11)] },
-        })
+        )
       end
     end
   end
