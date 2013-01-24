@@ -21,12 +21,7 @@ module Schemata
               "version_output"      => String,
               "version_flag"        => String,
               "additional_checks"   => String,
-              "environment" => {
-                "LD_LIBRARY_PATH"   => String,
-                "BUNDLE_GEMFILE"    => enum(String, NilClass),
-                "PATH"              => String,
-                "GEM_PATH"          => String
-              },
+              "environment"         => Hash,
               "status" => {
                 "name"              => String
               },
@@ -42,7 +37,7 @@ module Schemata
             "version"               => String,
             "services" => [{
               "label"               => String,
-              "tags"                => [String],
+              optional("tags")                => [String],
               "name"                => String,
               "credentials" => {
                 "hostname"          => String,
@@ -57,10 +52,9 @@ module Schemata
                 optional("user")    => String,
                 optional("pass")    => String,
               },
-              "options"             => any,
               "plan"                => String,
-              "plan_option"         => enum(String, NilClass),
-              "type"                => String,
+              optional("plan_option")   => enum(String, NilClass),
+              optional("type")          => String,
               "version"             => String,
               "vendor"              => String
             }],
@@ -70,9 +64,8 @@ module Schemata
               "fds"                 => Integer
             },
             "env"                   => [String],
-            "users"                 => [String],
             "cc_partition"          => String,
-            "debug"                 => any,
+            optional("debug")         => any,
             "console"               => any,
             "index"                 => Integer,
             optional("flapping")    => bool,
@@ -129,7 +122,6 @@ module Schemata
               "fds" => 256
             },
             "env" => [],
-            "users" => ["user@rbcon.com"],
             "cc_partition" => "default",
             "debug" => nil,
             "console" => nil,
