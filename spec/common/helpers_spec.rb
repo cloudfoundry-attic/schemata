@@ -87,29 +87,4 @@ describe Schemata::Helpers do
       end.to raise_error(described_class::CopyError, /Unexpected class: /)
     end
   end
-
-  describe "#stringify" do
-    it "should stringify nil" do
-      str = Schemata::Helpers.stringify(nil)
-      str.should == nil
-    end
-
-    it "should stringify a string" do
-      original = "foo"
-      str = Schemata::Helpers.stringify(original)
-      str.should == "foo"
-    end
-
-    it "should stringify a symbol" do
-      original = :foo
-      str = Schemata::Helpers.stringify(original)
-      str.should == "foo"
-    end
-
-    it "should stringify a hash" do
-      original = { "foo" => :foo }
-      str = Schemata::Helpers.stringify(original)
-      str.should == { "foo" => "foo" }
-    end
-  end
 end

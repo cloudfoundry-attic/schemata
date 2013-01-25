@@ -60,9 +60,9 @@ module Schemata
         # We don't validate aux data in decode.
         return msg_obj
       rescue Schemata::UpdateAttributeError => e
-        raise Schemata::DecodeError.new(e.message)
+        raise Schemata::DecodeError.new(e)
       rescue Membrane::SchemaValidationError => e
-        raise Schemata::DecodeError.new(e.message)
+        raise Schemata::DecodeError.new(e)
       end
     end
 
@@ -124,12 +124,14 @@ module Schemata
         end
 
         # Define attribute accessors for the message class
-        klass.schema.schemas.each do |key, field_schema|
-          klass.send(:define_method, key) do
-            @contents.send(key)
-          end
+        klass.schema.schemas.each do |key, _|
+          klass.send(:define_method, key) { @contents.send(key) }
           klass.send(:define_method, "#{key}=") do |field_value|
-            @contents.send("#{key}=", field_value)
+            begin
+              @contents.send("#{key}=", field_value)
+            rescue Membrane::SchemaValidationError => e
+              raise Schemata::UpdateAttributeError.new(key, e)
+            end
           end
         end
         self::const_set("V#{v}", klass)
@@ -144,9 +146,8 @@ module Schemata
         msg_obj = current_class.new(msg_contents)
         msg_obj.validate_contents
         return msg_obj
-      rescue Schemata::UpdateAttributeError,
-        Membrane::SchemaValidationError => e
-        raise Schemata::DecodeError.new(e.message)
+      rescue Schemata::UpdateAttributeError, Membrane::SchemaValidationError => e
+        raise Schemata::DecodeError.new(e)
       end
     end
 

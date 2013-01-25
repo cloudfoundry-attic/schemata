@@ -8,7 +8,5 @@ module Schemata
   end
 end
 
-Dir[File.dirname(__FILE__) + "/bar/*.rb"].each do |file|
-  require file
-end
+Dir[File.expand_path("../bar/*.rb", __FILE__)].each { |file| require file }
 

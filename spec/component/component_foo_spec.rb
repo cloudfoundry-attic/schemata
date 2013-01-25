@@ -94,7 +94,7 @@ describe Schemata::Component do
       }
       json_msg = Yajl::Encoder.encode msg_hash
       expect {
-        foo_obj = Schemata::Component::Foo.decode(json_msg)
+        Schemata::Component::Foo.decode(json_msg)
       }.to raise_error(Schemata::DecodeError)
     end
 
@@ -104,7 +104,7 @@ describe Schemata::Component do
       }
       json_msg = Yajl::Encoder.encode msg_hash
       expect {
-        foo_obj = Schemata::Component::Foo.decode(json_msg)
+        Schemata::Component::Foo.decode(json_msg)
       }.to raise_error(Schemata::DecodeError)
     end
 
@@ -147,7 +147,7 @@ describe Schemata::Component do
         }
         json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
-          foo_obj = Schemata::Component::Foo.decode(json_msg)
+          Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
@@ -164,7 +164,7 @@ of V11 and V10 hashes" do
         }
         json_msg = Yajl::Encoder.encode(msg_hash)
         expect {
-          foo_obj = Schemata::Component::Foo.decode(
+          Schemata::Component::Foo.decode(
             json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
@@ -183,20 +183,20 @@ of V10, V11, and V12 hashes" do
         }
         json_msg = Yajl::Encoder.encode msg_hash
         expect {
-          foo_obj = Schemata::Component::Foo.decode(json_msg)
+          Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
 
         msg_hash["V11"]["foo2"] = "bar"
         msg_hash["V12"]["foo2"] = 1
         json_msg = Yajl::Encoder.encode msg_hash
         expect {
-          foo_obj = Schemata::Component::Foo.decode(json_msg)
+          Schemata::Component::Foo.decode(json_msg)
         }.to raise_error(Schemata::DecodeError)
       end
 
       it "should raise an IncompatibleVersionError when it gets a v13 msg" do
         expect {
-          foo_obj = Schemata::Component::Foo.decode(@v13_msg)
+          Schemata::Component::Foo.decode(@v13_msg)
         }.to raise_error(Schemata::IncompatibleVersionError)
       end
     end
@@ -465,7 +465,7 @@ of V10, V11, and V12 hashes" do
       it "should raise an error if the msg_obj is incomplete" do
         msg_obj = Schemata::Component::Foo::V10.new({"foo1" => "foo"})
         expect {
-          json = msg_obj.encode
+          msg_obj.encode
         }.to raise_error(Schemata::EncodeError)
       end
     end
@@ -475,7 +475,7 @@ of V10, V11, and V12 hashes" do
         set_current_version(Schemata::Component::Foo, 11)
       end
 
-      after:each do
+      after :each do
         reset_version(Schemata::Component::Foo)
       end
 

@@ -7,7 +7,7 @@ describe Schemata::ParsedMessage do
         "V10" : { "foo" : "bar" }
       }'
       expect {
-        msg = Schemata::ParsedMessage.new(json)
+        Schemata::ParsedMessage.new(json)
       }.to raise_error(Schemata::DecodeError)
     end
 
@@ -17,7 +17,7 @@ describe Schemata::ParsedMessage do
         "foo" : "bar"
       }'
       expect {
-        msg = Schemata::ParsedMessage.new(json)
+        Schemata::ParsedMessage.new(json)
       }.to raise_error(Schemata::DecodeError)
     end
 
@@ -26,7 +26,7 @@ describe Schemata::ParsedMessage do
         "min_version" : 10
       }'
       expect {
-        msg = Schemata::ParsedMessage.new(json)
+        Schemata::ParsedMessage.new(json)
       }.to raise_error(Schemata::DecodeError)
     end
 

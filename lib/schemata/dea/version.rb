@@ -1,5 +1,5 @@
 module Schemata
   module Dea
-    VERSION = "0.0.1.beta18"
+    VERSION = "0.0.1.beta19"
   end
 end

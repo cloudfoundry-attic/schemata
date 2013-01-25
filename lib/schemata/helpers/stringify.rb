@@ -1,24 +1,21 @@
 module Schemata
   module Helpers
+    class StringifyError < StandardError; end
 
-    def self.stringify(node)
+    def self.stringify_symbols(node)
       case node
-      when String
-        return node
-      when Numeric, TrueClass, FalseClass
-        return node
       when Hash
         copy = {}
-        node.each { |k, v| copy[k.to_s] = stringify(v) }
+        node.each { |k, v| copy[k.to_s] = stringify_symbols(v) }
         return copy
       when Array
-        return node.map { |v| stringify(v) }
-      when NilClass
-        return nil
+        return node.map { |v| stringify_symbols(v) }
       when Symbol
         return node.to_s
+      when String, Numeric, TrueClass, FalseClass, NilClass
+        return node
       else
-        raise CopyError.new("Unexpected class: #{node.class}")
+        raise StringifyError.new("Unexpected class: #{node.class}")
       end
     end
 
