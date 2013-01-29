@@ -2,6 +2,8 @@
 require "ci/reporter/rake/rspec"
 require "rspec/core/rake_task"
 
+task default: [:spec]
+
 desc "Run all specs"
 RSpec::Core::RakeTask.new("spec") do |t|
   t.rspec_opts = %w[--color --format documentation]
@@ -16,7 +18,7 @@ RSpec::Core::RakeTask.new("spec") do |t|
     t.pattern = %w[spec/cloud_controller_spec.rb spec/common/*_spec.rb]
   when "Gemfile.health_manager"
     t.pattern = %w[spec/health_manager_spec.rb spec/common/*_spec.rb]
-  when "Gemfile.tests"
+  else
     t.pattern = %w[spec/**/*[Ss]pec.rb]
   end
 end
