@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cloudfoundry/schemata.png)](https://travis-ci.org/cloudfoundry/schemata)
+
 # Intro
 
 The issue that Schemata attempts to solve is the problem of handling
