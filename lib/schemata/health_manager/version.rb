@@ -1,5 +1,5 @@
 module Schemata
   module HealthManager
-    VERSION = "0.0.1.beta8"
+    VERSION = "0.0.1.beta9"
   end
 end
