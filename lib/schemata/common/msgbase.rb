@@ -1,6 +1,7 @@
 require 'yajl'
 require 'membrane'
 require 'schemata/common/error'
+require 'schemata/common/naming_constants'
 require 'schemata/helpers/stringify'
 require 'membrane'
 
@@ -141,12 +142,13 @@ module Schemata
     end
 
     def message_type
-      _, component, msg_type, _ = self.class.name.split("::")
+      msg_type = self.class.name.split("::")[Schemata::NamingConstants.message_type_index]
+      component = self.class.name.split("::")[Schemata::NamingConstants.component_name_index]
       Schemata::const_get(component)::const_get(msg_type)
     end
 
     def component
-      component = self.class.name.split("::")[1]
+      component = self.class.name.split("::")[Schemata::NamingConstants.component_name_index]
       Schemata::const_get(component)
     end
 
@@ -182,7 +184,10 @@ module Schemata
       end
 
       def previous_version
-        _, component, msg_type, version = self.name.split("::")
+        pieces = self.name.split("::")
+        component = pieces[Schemata::NamingConstants.component_name_index]
+        msg_type = pieces[Schemata::NamingConstants.message_type_index]
+        version = pieces[Schemata::NamingConstants.version_index]
         version = version[1..-1].to_i - 1
         Schemata::const_get(component)::const_get(msg_type)::const_get("V#{version}")
       end
