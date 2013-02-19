@@ -31,7 +31,7 @@ module Schemata
         end
 
         define_generate_old_fields do |msg_obj|
-
+          raise NotImplementedError.new
         end
 
         define_mock_values do
