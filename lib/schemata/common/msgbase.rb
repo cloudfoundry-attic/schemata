@@ -43,6 +43,7 @@ module Schemata
             field_value
           end
         end
+
         vc_klass
       end
 

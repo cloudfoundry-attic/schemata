@@ -3,39 +3,39 @@ require 'schemata/common/error'
 
 describe Schemata do
   let(:backtrace) { %w(foo bar) }
-  let(:message) { "message" }
-  let(:exception) do
-    error = StandardError.new(message)
-    error.set_backtrace backtrace
+  let(:error_message) { "error message" }
+  let(:custom_error) do
+    error = StandardError.new(error_message)
+    error.set_backtrace(backtrace)
     error
   end
 
-  describe Schemata::Error do
-    context 'when an exception is explicitly passed in' do
+  describe Schemata::SchemataError do
+    context 'when an error is explicitly passed in' do
       context 'and a message is not passed in' do
-        subject { Schemata::Error.new(exception) }
+        subject { Schemata::SchemataError.new(custom_error) }
 
-        its(:message) { should eq message }
+        its(:message) { should eq error_message }
         its(:backtrace) { should be_nil }
       end
 
       context 'and a message is passed in' do
-        subject { Schemata::Error.new(exception, "other message") }
+        subject { Schemata::SchemataError.new(custom_error, "other message") }
 
         its(:message) { should eq "other message" }
         its(:backtrace) { should be_nil }
       end
     end
 
-    context 'when no exception is passed in' do
+    context 'when no error is passed in' do
       context 'and it is a reraise' do
         subject do
           error = nil
           begin
             begin
-              raise exception
+              raise custom_error
             rescue
-              raise Schemata::Error.new
+              raise Schemata::SchemataError.new
             end
           rescue => e
             error = e
@@ -43,22 +43,22 @@ describe Schemata do
           error
         end
 
-        its(:message) { should eq message }
+        its(:message) { should eq error_message }
         its(:source_backtrace) { should eq backtrace }
 
-        it 'includes the re raised exception' do
+        it 'includes the re raised error' do
           expect(subject.backtrace.first).to match /error_spec\.rb/
         end
 
-        it 'includes the chained exception' do
+        it 'includes the chained error' do
           expect(subject.backtrace.last).to eq "bar"
         end
       end
 
-      context 'and it is a standlone exception' do
-        subject { Schemata::Error.new(nil, message) }
+      context 'and it is a standlone error' do
+        subject { Schemata::SchemataError.new(nil, error_message) }
 
-        its(:message) { should eq message }
+        its(:message) { should eq error_message }
         its(:backtrace) { should be_nil }
       end
     end
@@ -66,10 +66,10 @@ describe Schemata do
 
   describe Schemata::UpdateAttributeError do
     let(:key) { "key" }
-    subject { Schemata::UpdateAttributeError.new(key, exception) }
+    subject { Schemata::UpdateAttributeError.new(key, custom_error) }
 
-    its(:message) { should eq "#{key}: #{message}" }
-    its(:to_s) { should eq "#{key}: #{message}" }
+    its(:message) { should eq "#{key}: #{error_message}" }
+    its(:to_s) { should eq "#{key}: #{error_message}" }
     its(:key) { should eq key }
     its(:backtrace) { should be_nil }
   end

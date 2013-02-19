@@ -1,5 +1,5 @@
 module Schemata
-  class Error < StandardError
+  class SchemataError < StandardError
 
     attr_reader :source_exception, :source_backtrace
 
@@ -18,11 +18,11 @@ module Schemata
     end
   end
 
-  class DecodeError < Error; end
-  class EncodeError < Error; end
-  class SchemaDefinitionError < Error; end
+  class DecodeError < SchemataError; end
+  class EncodeError < SchemataError; end
+  class SchemaDefinitionError < SchemataError; end
 
-  class UpdateAttributeError < Error
+  class UpdateAttributeError < SchemataError
     attr_reader :key
 
     def initialize(key, exception = $!)
@@ -31,7 +31,7 @@ module Schemata
     end
   end
 
-  class IncompatibleVersionError < Error
+  class IncompatibleVersionError < SchemataError
     attr_reader :msg_version, :component_version
 
     def initialize(msg_version, component_version)
