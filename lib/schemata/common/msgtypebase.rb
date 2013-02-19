@@ -118,8 +118,8 @@ module Schemata
         # Create the necessary ValidatingContainer subclasses, one for schema
         # and, optionally, one for aux_schema.
         klass.instance_eval do
-          vc_klass = self::ValidatingContainer.define(self.schema)
-          self.const_set(:VC_KLASS, vc_klass)
+          schema_vc_klass = self::ValidatingContainer.define(self.schema)
+          self.const_set(:VC_KLASS, schema_vc_klass)
           if self.aux_schema
             aux_vc_klass = self::ValidatingContainer.define(self.aux_schema)
             self.const_set(:AUX_VC_KLASS, aux_vc_klass)
