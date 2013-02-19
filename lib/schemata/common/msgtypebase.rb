@@ -4,6 +4,10 @@ require 'schemata/helpers/decamelize'
 
 module Schemata
   module MessageTypeBase
+    # Components are named with the format: "Schemata::Component::MessageType".
+    COMPONENT_NAME_INDEX = 1
+    MESSAGE_TYPE_INDEX = 2
+
     def current_version
       return @current_version if @current_version
       @current_version = versions.max
@@ -67,18 +71,15 @@ module Schemata
     end
 
     def component
-      # Components are named with the format: "Schemata::Component::MessageType".
-      # So we don't need the first and last parts of the split.
-      _, component, _ = self.name.split("::")
-      Schemata::const_get(component)
+      Schemata::const_get(component_name)
     end
 
     def component_name
-      self.name.split("::")[1]
+      self.name.split("::")[COMPONENT_NAME_INDEX]
     end
 
     def message_type_name
-      self.name.split("::")[2]
+      self.name.split("::")[MESSAGE_TYPE_INDEX]
     end
 
     def require_message_versions
