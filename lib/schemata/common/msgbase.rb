@@ -37,7 +37,6 @@ module Schemata
             nil
           end
 
-
           vc_klass.send(:define_method, "#{key}=") do |field_value|
             field_value = validate_field(field_schema, key, field_value)
             @contents[key] = Schemata::Helpers.deep_copy(field_value)
