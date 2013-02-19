@@ -115,8 +115,8 @@ module Schemata
           klass.const_set(:INCLUDE_PRESCHEMATA, false)
         end
 
-        # Create the necessary ValidatingContainer subclasses (one for schema
-        # and, optionally, one for aux_schema
+        # Create the necessary ValidatingContainer subclasses, one for schema
+        # and, optionally, one for aux_schema.
         klass.instance_eval do
           vc_klass = self::ValidatingContainer.define(self.schema)
           self.const_set(:VC_KLASS, vc_klass)
