@@ -67,7 +67,9 @@ module Schemata
     end
 
     def component
-      _, component, message_type = self.name.split("::")
+      # Components are named with the format: "Schemata::Component::MessageType".
+      # So we don't need the first and last parts of the split.
+      _, component, _ = self.name.split("::")
       Schemata::const_get(component)
     end
 
