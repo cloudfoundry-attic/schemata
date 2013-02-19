@@ -1,3 +1,4 @@
+require 'schemata/common/naming_constants'
 require 'schemata/helpers/decamelize'
 
 module Schemata
@@ -8,7 +9,7 @@ module Schemata
     end
 
     def component_name
-      self.name.split("::")[1]
+      self.name.split("::")[Schemata::NamingConstants.component_name_index]
     end
 
     def eigenclass
@@ -40,6 +41,5 @@ module Schemata
       mod.require_message_classes
       mod.register_mock_methods
     end
-
   end
 end

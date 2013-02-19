@@ -1,13 +1,10 @@
+require 'schemata/common/naming_constants'
 require 'schemata/common/msgbase'
 require 'schemata/common/parsed_msg'
 require 'schemata/helpers/decamelize'
 
 module Schemata
   module MessageTypeBase
-    # Components are named with the format: "Schemata::Component::MessageType".
-    COMPONENT_NAME_INDEX = 1
-    MESSAGE_TYPE_INDEX = 2
-
     def current_version
       return @current_version if @current_version
       @current_version = versions.max
@@ -75,11 +72,11 @@ module Schemata
     end
 
     def component_name
-      self.name.split("::")[COMPONENT_NAME_INDEX]
+      self.name.split("::")[Schemata::NamingConstants.component_name_index]
     end
 
     def message_type_name
-      self.name.split("::")[MESSAGE_TYPE_INDEX]
+      self.name.split("::")[Schemata::NamingConstants.message_type_index]
     end
 
     def require_message_versions
