@@ -1,5 +1,5 @@
 require 'membrane'
-require 'schemata/common/msgtypebase'
+require 'schemata/core/msgtypebase'
 require 'schemata/helpers/hash_copy'
 
 module Schemata

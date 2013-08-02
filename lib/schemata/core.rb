@@ -1,0 +1,6 @@
+require 'schemata/core/componentbase'
+require 'schemata/core/error'
+require 'schemata/core/msgbase'
+require 'schemata/core/msgtypebase'
+require 'schemata/core/naming_constants'
+require 'schemata/core/parsed_msg'

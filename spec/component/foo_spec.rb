@@ -1,5 +1,5 @@
 require 'schemata/component/foo'
-require 'schemata/common/error'
+require 'schemata/core/error'
 require 'support/helpers'
 
 describe Schemata::Component::Foo do

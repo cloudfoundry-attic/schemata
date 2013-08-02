@@ -1,4 +1,4 @@
-require 'schemata/component/component'
+require 'schemata/component'
 require 'support/helpers'
 
 describe Schemata::Component do

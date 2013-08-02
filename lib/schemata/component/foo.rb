@@ -1,4 +1,4 @@
-require 'schemata/common/msgtypebase'
+require 'schemata/core/msgtypebase'
 
 module Schemata
   module Component

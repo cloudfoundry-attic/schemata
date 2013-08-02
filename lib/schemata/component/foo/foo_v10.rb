@@ -1,6 +1,6 @@
 require 'membrane'
 require 'schemata/helpers/hash_copy'
-require 'schemata/common/msgtypebase'
+require 'schemata/core/msgtypebase'
 
 module Schemata
   module Component
