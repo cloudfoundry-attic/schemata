@@ -1,5 +1,4 @@
-require 'schemata/component'
-require 'support/helpers'
+require "spec_helper"
 
 describe Schemata::Component do
   before :each do

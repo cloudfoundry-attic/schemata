@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'schemata/helpers'
 
 describe Schemata::Helpers do
   describe ".stringify" do

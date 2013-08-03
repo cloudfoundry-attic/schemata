@@ -1,4 +1,4 @@
-require 'schemata/component2/bar'
+require 'fixtures/component2/bar'
 
 module Schemata
   module Component2

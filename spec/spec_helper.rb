@@ -1,1 +1,1 @@
-Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
+Dir["./spec/{support,fixtures}/**/*.rb"].sort.each { |f| require f }

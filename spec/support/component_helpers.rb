@@ -1,6 +1,3 @@
-require 'support/helpers'
-require 'schemata/helpers/decamelize'
-
 shared_examples "a schemata component" do
 
   described_class.constants.select { |x| x != :VERSION }.each do |msg_type|
@@ -21,12 +18,12 @@ shared_examples "a schemata component" do
     describe msg_type do
       message_type = described_class::const_get(msg_type)
       it_behaves_like "a message type", message_type do
-        let (:message_type)       { described_class::const_get(msg_type) }
-        let (:message_type_name)  { msg_type.to_s }
-        let (:component)          { described_class }
-        let (:component_name)     { component.name.split("::")[1] }
+        let(:message_type)       { described_class::const_get(msg_type) }
+        let(:message_type_name)  { msg_type.to_s }
+        let(:component)          { described_class }
+        let(:component_name)     { component.name.split("::")[1] }
 
-        let (:mock_method)        { "mock_#{Schemata::Helpers.decamelize(msg_type)}" }
+        let(:mock_method)        { "mock_#{Schemata::Helpers.decamelize(msg_type)}" }
       end
     end
   end

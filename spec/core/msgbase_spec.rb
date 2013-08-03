@@ -1,7 +1,4 @@
 require 'spec_helper'
-require 'membrane'
-require 'schemata/helpers'
-require 'schemata/core/msgbase'
 
 describe Schemata::MessageBase do
   describe Schemata::MessageBase::ValidatingContainer do

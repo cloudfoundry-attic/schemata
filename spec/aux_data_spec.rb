@@ -1,4 +1,4 @@
-require 'schemata/component/foo'
+require "spec_helper"
 
 describe Schemata::Component::Foo::V14 do
   describe "#new" do

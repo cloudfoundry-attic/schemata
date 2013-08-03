@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'schemata/core/componentbase'
 
 describe Schemata::ComponentBase do
   let(:component) { Schemata::Component }

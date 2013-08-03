@@ -1,6 +1,6 @@
 require 'schemata/core'
-require 'schemata/component/bar'
-require 'schemata/component/foo'
+require 'fixtures/component/bar'
+require 'fixtures/component/foo'
 
 module Schemata
   module Component

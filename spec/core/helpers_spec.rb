@@ -1,5 +1,4 @@
-require 'schemata/helpers/hash_copy'
-require 'schemata/helpers/stringify'
+require "spec_helper"
 
 describe Schemata::Helpers do
   describe "#deep_copy" do

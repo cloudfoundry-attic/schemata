@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'schemata/component'
-require 'schemata/core/msgtypebase'
 
 describe Schemata::MessageTypeBase do
   let(:msgtype) { Schemata::Component::Foo }

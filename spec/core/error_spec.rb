@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'schemata/core/error'
 
 describe Schemata do
   let(:backtrace) { %w(foo bar) }

@@ -1,4 +1,4 @@
-require 'schemata/core/parsed_msg'
+require "spec_helper"
 
 describe Schemata::ParsedMessage do
   describe "#new" do
